@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>shb3r-dots</title>
+<meta name="description" content="Escritorio completo para Hyprland en CachyOS. Se instala con un solo comando.">
+<style>
+  :root {
+    --bg: #0d1110;
+    --panel: #161c1a;
+    --fg: #d9e2dd;
+    --muted: #8b9a93;
+    --accent: #8fd18a;
+    --border: #26302c;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f3f6f4;
+      --panel: #ffffff;
+      --fg: #1b2420;
+      --muted: #5c6b64;
+      --accent: #2f7d32;
+      --border: #d6dfda;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.5;
+  }
+  main { width: 100%; max-width: 640px; }
+  h1 { margin: 0 0 4px; font-size: 2rem; }
+  h1 span { color: var(--accent); }
+  p { margin: 0 0 20px; color: var(--muted); }
+  .cmd {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  code {
+    flex: 1;
+    font: 0.95rem ui-monospace, "JetBrains Mono", monospace;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  button {
+    flex: none;
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--bg);
+    background: var(--accent);
+    border: 0;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  ol { margin: 24px 0; padding-left: 20px; }
+  li { margin: 6px 0; }
+  a { color: var(--accent); }
+  footer { font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>shb3r<span>-dots</span></h1>
+  <p>Escritorio completo para Hyprland en CachyOS: barra, panel de ajustes, lanzador y temas con fondos animados.</p>
+
+  <div class="cmd">
+    <code id="cmd">curl -fsSL shb3r.github.io/i | bash</code>
+    <button id="copy" type="button">Copiar</button>
+  </div>
+
+  <ol>
+    <li>Instala <a href="https://cachyos.org">CachyOS</a> y elige <strong>Hyprland</strong>.</li>
+    <li>Abre una terminal, pega el comando y presiona Enter.</li>
+    <li>Contesta dos preguntas (teclado y extras) y escribe tu contraseña.</li>
+    <li>Reinicia. Al entrar verás los atajos de teclado.</li>
+  </ol>
+
+  <footer>Código e instrucciones: <a href="https://github.com/ralf-jar/shb3r-dots">github.com/ralf-jar/shb3r-dots</a></footer>
+</main>
+<script>
+  const btn = document.getElementById("copy");
+  btn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(document.getElementById("cmd").textContent);
+      btn.textContent = "¡Copiado!";
+    } catch {
+      btn.textContent = "Selecciónalo y copia";
+    }
+    setTimeout(() => { btn.textContent = "Copiar"; }, 2000);
+  });
+</script>
+</body>
+</html>
