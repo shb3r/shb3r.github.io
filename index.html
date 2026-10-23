@@ -3,105 +3,779 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>shb3r-dots</title>
-<meta name="description" content="Escritorio completo para Hyprland en CachyOS. Se instala con un solo comando.">
+<title>shb3r-dots · flipfrog</title>
+<meta name="description" content="Escritorio completo para Hyprland en CachyOS: barra propia, dashboard, themer, más de 20 apps integradas. Se instala con un solo comando.">
+<link rel="icon" href="assets/frog.gif">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Silkscreen&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d1110;
-    --panel: #161c1a;
-    --fg: #d9e2dd;
-    --muted: #8b9a93;
-    --accent: #8fd18a;
-    --border: #26302c;
-  }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #f3f6f4;
-      --panel: #ffffff;
-      --fg: #1b2420;
-      --muted: #5c6b64;
-      --accent: #2f7d32;
-      --border: #d6dfda;
-    }
+    /* Roles del tema forest-road (predeterminado) */
+    --bg: #0b0f0f;
+    --bg-2: #111716;
+    --panel: rgba(16, 22, 22, 0.72);
+    --panel-solid: #141b1b;
+    --hover: #222629;
+    --fg: #f2f1ec;
+    --muted: #9aa6a3;
+    --accent: #ccc8b4;
+    --accent-2: #c0bfbc;
+    --teal: #5a7b80;
+    --road: #e0812f;
+    --border: rgba(90, 123, 128, 0.35);
+    --border-strong: #5a7b80;
+    --radius: 14px;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --pixel: "Silkscreen", var(--mono);
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     margin: 0;
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: 24px 16px;
     background: var(--bg);
     color: var(--fg);
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    line-height: 1.5;
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
-  main { width: 100%; max-width: 640px; }
-  h1 { margin: 0 0 4px; font-size: 2rem; }
-  h1 span { color: var(--accent); }
-  p { margin: 0 0 20px; color: var(--muted); }
-  .cmd {
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    min-height: clamp(560px, 100svh, 1000px);
     display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
+    flex-direction: column;
+    background: url("assets/forest-road.jpg") center 60% / cover no-repeat;
+    isolation: isolate;
   }
-  code {
-    flex: 1;
-    font: 0.95rem ui-monospace, "JetBrains Mono", monospace;
-    overflow-x: auto;
+  .hero::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(11,15,15,0) 40%, var(--bg) 100%),
+      radial-gradient(ellipse at 50% 35%, rgba(11,15,15,0.15), rgba(11,15,15,0.65));
+    z-index: -1;
+  }
+
+  /* Réplica de la barra (bar.css, tema forest-road) */
+  .bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px 0;
+    font-size: 14px;
+  }
+  .bar.mini { font-size: 10px; padding: 0; gap: 6px; }
+  .bar.mini .tray .ico:nth-child(n+5) { display: none; }
+  .side { display: flex; align-items: center; gap: .55em; min-width: 0; }
+  .side.right { justify-content: flex-end; }
+  .island {
+    display: flex; align-items: center; gap: .3em;
+    height: 2.5em;
+    padding: 0 .9em;
+    border-radius: 25px;
+    background: rgba(0, 0, 0, 0.40);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     white-space: nowrap;
   }
-  button {
+  .frog { width: 2em; height: 1.7em; object-fit: contain; image-rendering: pixelated; filter: sepia(1) saturate(.35) brightness(1.2) hue-rotate(10deg); }
+  .frog-pill { padding: 0 .55em; }
+  .ws-pill { padding: 0 .35em; gap: .15em; }
+  .wsb {
+    display: flex; align-items: center; gap: .35em;
+    height: 1.95em;
+    padding: 0 .6em;
+    border-radius: 25px;
+    color: var(--fg);
+  }
+  .wsb b { font-weight: 500; padding: 0 .1em; }
+  .wsb.active { background: #222629; }
+  .wsb.active b { color: var(--accent); font-weight: 800; }
+  .ico { width: 1.15em; height: 1.15em; flex: none; }
+  .clock-pill { padding: 0 1.45em; justify-self: center; }
+  .clock { font-weight: 700; color: var(--accent); }
+  .tray { gap: .75em; padding: 0 1em; color: var(--fg); }
+  .power { color: var(--accent-2); padding: 0 1em; }
+  .pw { width: 1.05em; height: 1.05em; }
+
+  .hero-body {
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 80px;
+  }
+  .eyebrow {
+    font: 12px var(--pixel);
+    letter-spacing: .14em;
+    color: var(--road);
+    text-transform: uppercase;
+    margin: 0 0 14px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.6rem, 8vw, 5.4rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  h1 span { color: var(--accent); }
+  .lead {
+    max-width: 620px;
+    margin: 20px 0 32px;
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    color: #d6dad7;
+  }
+  .cmd {
+    display: flex; align-items: center; gap: 12px;
+    max-width: 560px;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 12px 12px 12px 18px;
+  }
+  .cmd code {
+    flex: 1; min-width: 0;
+    font: 0.95rem var(--mono);
+    overflow-x: auto; white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .cmd code::before { content: "$ "; color: var(--road); }
+  .btn {
     flex: none;
-    font: inherit;
-    font-size: 0.9rem;
+    font: 600 14px "Space Grotesk", sans-serif;
     color: var(--bg);
     background: var(--accent);
     border: 0;
-    border-radius: 6px;
-    padding: 6px 12px;
+    border-radius: 10px;
+    padding: 9px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .15s, background .15s;
+  }
+  .btn:hover { background: #fff; transform: translateY(-1px); }
+  .btn.ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong); }
+  .btn.ghost:hover { background: rgba(255,255,255,.06); }
+  .hero-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
+  .req { font-size: 14px; color: var(--muted); }
+
+  /* ---------- Estadísticas ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: -40px;
+    position: relative;
+  }
+  .stat { background: var(--panel-solid); padding: 22px 20px; }
+  .stat b { display: block; font-size: 2rem; line-height: 1.1; color: var(--accent); }
+  .stat span { font-size: 14px; color: var(--muted); }
+
+  /* ---------- Secciones ---------- */
+  section { padding: 96px 0 0; }
+  .sec-head { max-width: 680px; margin-bottom: 36px; }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.1; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .sec-head p { margin: 0; color: var(--muted); font-size: 1.08rem; }
+  h3 { margin: 0 0 6px; font-size: 1.08rem; }
+  .card {
+    background: var(--panel-solid);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .tag {
+    display: inline-block;
+    font: 11px var(--pixel);
+    color: var(--road);
+    letter-spacing: .08em;
+    margin-bottom: 10px;
+  }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+
+  /* Barra: dos columnas */
+  .split { display: grid; gap: 28px; grid-template-columns: 1.1fr 1fr; align-items: start; }
+  ul.check { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  ul.check li { padding-left: 26px; position: relative; color: #cfd5d2; }
+  ul.check li::before {
+    content: ""; position: absolute; left: 4px; top: .55em;
+    width: 9px; height: 9px; border-radius: 3px;
+    background: var(--road);
+  }
+  ul.check b { color: var(--fg); }
+  .modes { display: grid; gap: 14px; }
+  .mode-label { font: 11px var(--pixel); color: var(--muted); margin-bottom: 8px; letter-spacing: .08em; }
+  .mini-bg {
+    border-radius: var(--radius);
+    padding: 12px;
+    background: url("assets/forest-road.jpg") 70% 70% / 260% auto;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .capsule-bar { display: flex; justify-content: center; font-size: 11px; }
+  .capsule-bar .island { gap: .7em; padding: 0 0 0 .4em; }
+  .capsule-bar .power { padding: 0 1.1em 0 .2em; }
+
+  /* Dashboard con pestañas */
+  .dash {
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(0,0,0,.62), rgba(0,0,0,.62)),
+      url("assets/forest-road.jpg") 30% 40% / cover;
+  }
+  .tabs {
+    display: flex; gap: 4px;
+    padding: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .tabs button {
+    flex: none;
+    font: 500 14px "Space Grotesk", sans-serif;
+    color: var(--muted);
+    background: none;
+    border: 0;
+    padding: 8px 14px;
+    border-radius: 9px;
     cursor: pointer;
   }
-  ol { margin: 24px 0; padding-left: 20px; }
-  li { margin: 6px 0; }
-  a { color: var(--accent); }
-  footer { font-size: 0.85rem; color: var(--muted); }
+  .tabs button:hover { color: var(--fg); }
+  .tabs button[aria-selected="true"] { background: var(--hover); color: var(--accent); box-shadow: inset 0 0 0 1px var(--teal); }
+  .tabs button:focus-visible { outline: 2px solid var(--road); }
+  .tab-panel { padding: 26px; min-height: 230px; display: grid; gap: 22px; grid-template-columns: 1fr 1fr; }
+  .tab-panel h3 { font-size: 1.4rem; margin-bottom: 10px; }
+  .tab-panel > div > p { color: #cfd5d2; margin: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; }
+  .chip {
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    color: #dfe3e1;
+  }
+
+  /* Themer */
+  .themes { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .theme-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--panel-solid);
+  }
+  .theme-card .shot { aspect-ratio: 32 / 9; background-size: cover; background-position: center; }
+  .theme-card .meta { padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .swatches { display: flex; gap: 6px; }
+  .swatches i { width: 22px; height: 22px; border-radius: 6px; border: 1px solid rgba(255,255,255,.15); }
+  .sync {
+    margin-top: 18px;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  }
+  .sync .from {
+    font: 600 13px var(--mono);
+    color: var(--bg); background: var(--accent);
+    padding: 6px 12px; border-radius: 8px;
+  }
+  .sync .arrow { color: var(--road); font-family: var(--mono); }
+
+  /* Apps */
+  .apps .card { display: flex; flex-direction: column; }
+  .apps .card .key { margin-top: auto; padding-top: 14px; }
+  .key-inline {
+    display: inline-block;
+    font: 600 11px var(--mono);
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--hover);
+    color: var(--accent);
+    box-shadow: 2px 2px 0 0 var(--teal);
+  }
+
+  /* Atajos */
+  .keys { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  .keyrow {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: var(--panel-solid);
+    border: 1px solid var(--border);
+    font-size: 15px;
+  }
+  .combo { display: flex; gap: 6px; flex: none; }
+  kbd {
+    font: 600 12px var(--mono);
+    min-width: 28px;
+    text-align: center;
+    padding: 5px 9px;
+    border-radius: 7px;
+    background: #1d2424;
+    color: var(--fg);
+    border: 1px solid #39494b;
+    box-shadow: 2px 2px 0 0 #39494b;
+  }
+
+  /* Instalador */
+  .steps { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); counter-reset: step; }
+  .step { position: relative; padding-top: 50px; }
+  .step::before {
+    counter-increment: step;
+    content: counter(step, decimal-leading-zero);
+    position: absolute; top: 18px; left: 22px;
+    font: 18px var(--pixel);
+    color: var(--road);
+  }
+  .term {
+    margin-top: 22px;
+    border-radius: var(--radius);
+    background: #070909;
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    font: 13px/1.7 var(--mono);
+    color: #cfd5d2;
+    overflow-x: auto;
+  }
+  .term .ok { color: #8fd18a; }
+  .term .dim { color: #66726f; }
+  .term .bar-fill { color: var(--accent); }
+  .extras { margin-top: 22px; }
+  .extras .chip.def { border-color: var(--road); color: var(--fg); }
+
+  /* Bajo el capó */
+  .under { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .under .num { font: 700 1.6rem "Space Grotesk"; color: var(--accent); }
+
+  /* CTA final */
+  .cta {
+    margin-top: 110px;
+    border-radius: 22px;
+    padding: 60px 28px;
+    text-align: center;
+    background:
+      linear-gradient(rgba(11,15,15,.55), rgba(11,15,15,.85)),
+      url("assets/dragon-blue.jpg") center / cover;
+    border: 1px solid var(--border-strong);
+  }
+  .cta .cmd { margin: 26px auto 0; text-align: left; }
+  .cta p { color: #cfd5d2; margin: 10px auto 0; max-width: 520px; }
+
+  footer {
+    padding: 48px 0 40px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a { color: var(--accent); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  @media (max-width: 860px) {
+    .split, .tab-panel { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .bar { grid-template-columns: auto 1fr auto; }
+    .bar .tray, .bar .date, .bar .frog-pill { display: none; }
+    .bar.mini { font-size: 9px; }
+    .cmd { flex-wrap: wrap; }
+    .cmd code { flex-basis: 100%; }
+    .keys { grid-template-columns: 1fr; }
+    .keyrow { flex-wrap: wrap; }
+    .tab-panel { padding: 20px; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>shb3r<span>-dots</span></h1>
-  <p>Escritorio completo para Hyprland en CachyOS: barra, panel de ajustes, lanzador y temas con fondos animados.</p>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-pw" viewBox="0 0 24 24"><path d="M12 3v8M6.3 6.8a8 8 0 1 0 11.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m7 9.5 3 2.5-3 2.5M12.5 15h4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-web" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4.5l-3 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-head" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="4.5" height="6.5" rx="1.5" fill="currentColor"/><rect x="16.5" y="14" width="4.5" height="6.5" rx="1.5" fill="currentColor"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A2.5 2.5 0 0 1 4 13.5z" fill="currentColor"/><circle cx="9" cy="9.5" r="1.4" fill="#000"/><circle cx="15" cy="9.5" r="1.4" fill="#000"/></symbol>
+    <symbol id="i-game" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="currentColor"/><circle cx="15" cy="9" r="3" fill="none" stroke="#000" stroke-width="1.8"/><circle cx="8" cy="15" r="2" fill="#000"/><path d="m8 15 5-4.5" stroke="#000" stroke-width="1.8"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 17.5h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 0 1 9.6-4.8M18 10.5v6H8.5M10 20h4M4 21 20 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bt" viewBox="0 0 24 24"><path d="m7 7.5 10 9-5 4.5V3l5 4.5-10 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-vol" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
 
-  <div class="cmd">
-    <code id="cmd">curl -fsSL shb3r.github.io/i | bash</code>
-    <button id="copy" type="button">Copiar</button>
+<header class="hero">
+  <nav class="bar" aria-label="Réplica de la barra en modo islas">
+    <div class="side">
+      <div class="island frog-pill"><img class="frog" src="assets/frog.gif" alt=""></div>
+      <div class="island ws-pill">
+        <span class="wsb"><b>1</b><svg class="ico"><use href="#i-code"/></svg><svg class="ico"><use href="#i-web"/></svg><svg class="ico"><use href="#i-term"/></svg></span>
+        <span class="wsb active"><b>2</b><svg class="ico"><use href="#i-code"/></svg></span>
+      </div>
+    </div>
+    <div class="island clock-pill"><span class="clock"><span class="date" id="date">Vie 23 de oct </span><span id="time">1:26 PM</span></span></div>
+    <div class="side right">
+      <div class="island tray"><svg class="ico"><use href="#i-head"/></svg><svg class="ico"><use href="#i-chat"/></svg><svg class="ico"><use href="#i-game"/></svg><svg class="ico"><use href="#i-bulb"/></svg><svg class="ico"><use href="#i-bell"/></svg><svg class="ico"><use href="#i-bt"/></svg><svg class="ico"><use href="#i-vol"/></svg></div>
+      <div class="island"><span class="power"><svg class="pw"><use href="#i-pw"/></svg></span></div>
+    </div>
+  </nav>
+
+  <div class="wrap hero-body">
+    <p class="eyebrow">flipfrog · Hyprland · CachyOS</p>
+    <h1>shb3r<span>-dots</span></h1>
+    <p class="lead">Un escritorio completo hecho a mano sobre Hyprland: barra propia, panel de control, temas que pintan todo el sistema y más de veinte apps integradas. Se instala con un solo comando.</p>
+    <div class="cmd">
+      <code>curl -fsSL shb3r.github.io/i | bash</code>
+      <button class="btn copy" type="button">Copiar</button>
+    </div>
+    <div class="hero-links">
+      <a class="btn ghost" href="https://github.com/ralf-jar/shb3r-dots">Ver en GitHub</a>
+      <a class="btn ghost" href="#todo">Qué trae</a>
+      <span class="req">Requiere CachyOS, edición Hyprland.</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="stats reveal">
+      <div class="stat"><b>1</b><span>comando para instalar</span></div>
+      <div class="stat"><b>8</b><span>pestañas en el dashboard</span></div>
+      <div class="stat"><b>20+</b><span>popups y apps propias</span></div>
+      <div class="stat"><b>12 MB</b><span>todos los daemons juntos</span></div>
+      <div class="stat"><b>2</b><span>idiomas: español e inglés</span></div>
+    </div>
   </div>
 
-  <ol>
-    <li>Instala <a href="https://cachyos.org">CachyOS</a> y elige <strong>Hyprland</strong>.</li>
-    <li>Abre una terminal, pega el comando y presiona Enter.</li>
-    <li>Contesta dos preguntas (teclado y extras) y escribe tu contraseña.</li>
-    <li>Reinicia. Al entrar verás los atajos de teclado.</li>
-  </ol>
+  <!-- Barra -->
+  <section id="todo">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">La barra</p>
+        <h2>Una barra propia, no Waybar.</h2>
+        <p>Escrita en Python + GTK3 desde cero. Todo cambia en vivo: tema, fuente, redondeo, módulos. Nunca se reinicia.</p>
+      </div>
+      <div class="split">
+        <ul class="check reveal">
+          <li><b>Islas o cápsula</b>, fondo transparente o barra completa: se cambia con un switch y se ve al instante.</li>
+          <li><b>Workspaces con íconos de apps</b>: agrupar ventanas por app, compactar los que no se ven, clic medio cierra.</li>
+          <li><b>Tray completo</b> (StatusNotifier + DBusMenu) con íconos que siguen el color del tema.</li>
+          <li><b>Reloj con degradado</b>, formato corto o extendido; clic abre el calendario, clic derecho las alarmas.</li>
+          <li><b>Métricas de uso</b>: RAM, CPU, GPU y temperaturas (NVIDIA o AMD).</li>
+          <li><b>Indicadores</b> visibles solo cuando realmente importan.</li>
+          <li><b>Animaciones elegantes</b> en la entrada y salida de los popups.</li>
+        </ul>
+        <div class="modes reveal">
+          <div>
+            <div class="mode-label">Islas</div>
+            <div class="mini-bg">
+              <nav class="bar mini" aria-label="Réplica de la barra en modo islas">
+                <div class="side">
+                  <div class="island frog-pill"><img class="frog" src="assets/frog.gif" alt=""></div>
+                  <div class="island ws-pill">
+                    <span class="wsb"><b>1</b><svg class="ico"><use href="#i-code"/></svg><svg class="ico"><use href="#i-web"/></svg><svg class="ico"><use href="#i-term"/></svg></span>
+                    <span class="wsb active"><b>2</b><svg class="ico"><use href="#i-code"/></svg></span>
+                  </div>
+                </div>
+                <div class="island clock-pill"><span class="clock">Vie 23 de oct 1:26 PM</span></div>
+                <div class="side right">
+                  <div class="island tray"><svg class="ico"><use href="#i-head"/></svg><svg class="ico"><use href="#i-chat"/></svg><svg class="ico"><use href="#i-game"/></svg><svg class="ico"><use href="#i-bulb"/></svg><svg class="ico"><use href="#i-bell"/></svg><svg class="ico"><use href="#i-bt"/></svg><svg class="ico"><use href="#i-vol"/></svg></div>
+                  <div class="island"><span class="power"><svg class="pw"><use href="#i-pw"/></svg></span></div>
+                </div>
+              </nav>
+            </div>
+          </div>
+          <div>
+            <div class="mode-label">Cápsula</div>
+            <div class="mini-bg capsule">
+              <div class="capsule-bar">
+                <div class="island">
+                  <img class="frog" src="assets/frog.gif" alt="">
+                  <span class="wsb"><b>1</b><svg class="ico"><use href="#i-code"/></svg><svg class="ico"><use href="#i-web"/></svg></span><span class="wsb active"><b>2</b><svg class="ico"><use href="#i-code"/></svg></span>
+                  <span class="clock">Vie 23 de oct 1:26 PM</span>
+                  <span class="power"><svg class="pw"><use href="#i-pw"/></svg></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <footer>Código e instrucciones: <a href="https://github.com/ralf-jar/shb3r-dots">github.com/ralf-jar/shb3r-dots</a></footer>
+  <!-- Dashboard -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Dashboard · <span class="key-inline">SUPER + +</span></p>
+        <h2>Todo el sistema en un panel.</h2>
+        <p>Personaliza cada aspecto, desde lo visual, hasta tus tipos de conexiones, seguridad y monitores.</p>
+      </div>
+      <div class="dash reveal">
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <div class="tab-panel" role="tabpanel" id="panel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Themer -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Themer</p>
+        <h2>Un tema para pintarlos a todos.</h2>
+        <p>Cada tema son 8 colores y un fondo (imagen, gif o video). Al aplicarlo, se sincroniza a cada app que lo soporte, sin cerrar nada.</p>
+      </div>
+      <div class="themes reveal">
+        <div class="theme-card">
+          <div class="shot" style="background-image:url('assets/forest-road.jpg')"></div>
+          <div class="meta">
+            <div><h3>forest-road</h3><p class="req">Predeterminado</p></div>
+            <div class="swatches"><i style="background:#222629"></i><i style="background:#5a7b80"></i><i style="background:#547a80"></i><i style="background:#ccc8b4"></i><i style="background:#c0bfbc"></i><i style="background:#fff"></i></div>
+          </div>
+        </div>
+        <div class="theme-card">
+          <div class="shot" style="background-image:url('assets/dragon-blue.jpg')"></div>
+          <div class="meta">
+            <div><h3>dragon-blue</h3><p class="req">Incluido</p></div>
+            <div class="swatches"><i style="background:#241f31"></i><i style="background:#074880"></i><i style="background:#ffa348"></i><i style="background:#99c1f1"></i><i style="background:#8ff0a4"></i><i style="background:#fff"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="sync reveal">
+        <span class="from">colors.css</span><span class="arrow">→</span>
+        <span class="chip">Hyprland</span><span class="chip">Barra y popups</span><span class="chip">GTK 3/4</span><span class="chip">Qt / KDE</span><span class="chip">Kitty</span><span class="chip">Dunst</span><span class="chip">Fastfetch</span><span class="chip">btop</span><span class="chip">Brave</span><span class="chip">Zen</span><span class="chip">Vesktop</span><span class="chip">Steam (Millennium)</span><span class="chip">Pantalla de login (SDDM)</span>
+      </div>
+      <div class="grid reveal" style="margin-top:22px">
+        <div class="card"><span class="tag">SUPER + P</span><h3>Galería de temas</h3><p>Pantalla casi completa con miniaturas, favoritos y filtros por imágenes, videos o favoritos.</p></div>
+        <div class="card"><span class="tag">EDITOR</span><h3>Crea tus temas</h3><p>Ajusta cada color con alpha, o deja que el editor saque la paleta del fondo.</p></div>
+        <div class="card"><span class="tag">ROTACIÓN</span><h3>Cambia solo</h3><p>Rotación automática entre favoritos cada N horas, con un timer de systemd, sin proceso de fondo.</p></div>
+        <div class="card"><span class="tag">ESTILO</span><h3>Redondeo y fuente globales</h3><p>Un número controla las esquinas de todo, ventanas incluidas. La fuente y su tamaño, igual.</p></div>
+        <div class="card"><span class="tag">VISTA PREVIA</span><h3>Cursores, íconos y arranque</h3><p>Selectores con vista previa real y descarga desde los repos o la KDE Store, también para Plymouth.</p></div>
+        <div class="card"><span class="tag">JUEGOS</span><h3>Fondo fijo al jugar</h3><p>Con un juego o el modo cine, un fondo de video se congela en un cuadro para no gastar GPU.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apps -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Apps propias</p>
+        <h2>Lo que normalmente instalarías aparte, ya integrado.</h2>
+        <p>Todas comparten el tema, el idioma y el mismo estilo. Las que reproducen o descargan siguen trabajando aunque cierres la ventana.</p>
+      </div>
+      <div class="grid apps reveal">
+        <div class="card"><h3>Lanzador</h3><p>Búsqueda, categorías editables, apps más usadas. Termina con "?" y pregunta a Claude.</p><div class="key"><span class="key-inline">SUPER + SPACE</span></div></div>
+        <div class="card"><h3>Descubre Bandcamp</h3><p>Radio por tags, artista o wishlist, y tu música local. Autoecualizador según el género.</p><div class="key"><span class="key-inline">SUPER + M</span></div></div>
+        <div class="card"><h3>Descargas</h3><p>MediaFire, Google Drive, MEGA, YouTube (MP3 o MP4) y torrents. Pausa y reanuda.</p><div class="key"><span class="key-inline">SUPER + D</span></div></div>
+        <div class="card"><h3>Audiolibros</h3><p>Convierte un EPUB en MP3 narrado con Piper y lo lee con el texto sincronizado.</p><div class="key"><span class="key-inline">SUPER + A</span></div></div>
+        <div class="card"><h3>Collage de ventanas</h3><p>Todas las ventanas de todos los workspaces en vivo. Arrastra para moverlas de workspace.</p><div class="key"><span class="key-inline">SUPER + CTRL + TAB</span></div></div>
+        <div class="card"><h3>Notificaciones</h3><p>Historial agrupado por día, volver a mostrar, borrar y No molestar que sobrevive al reinicio.</p><div class="key"><span class="key-inline">SUPER + N</span></div></div>
+        <div class="card"><h3>Calendario</h3><p>Notas por día en tu propio servidor CalDAV, sincronizadas con Android con un QR.</p><div class="key"><span class="key-inline">clic en el reloj</span></div></div>
+        <div class="card"><h3>Alarmas</h3><p>Una vez o por días de la semana. Suenan aunque estés jugando.</p><div class="key"><span class="key-inline">clic derecho en el reloj</span></div></div>
+        <div class="card"><h3>Atajos</h3><p>Todos los atajos de teclado, leídos de la config real. Puede abrirse al iniciar sesión.</p><div class="key"><span class="key-inline">SUPER + H</span></div></div>
+        <div class="card"><h3>Google Fonts</h3><p>Busca, previsualiza e instala cualquier fuente de Google en un clic.</p><div class="key"><span class="key-inline">Personalización</span></div></div>
+        <div class="card"><h3>Uso de disco</h3><p>Árbol tipo TreeSize de todo el disco, en unos segundos.</p><div class="key"><span class="key-inline">pestaña Procesos</span></div></div>
+        <div class="card"><h3>Firewall</h3><p>Reglas de UFW, registro de bloqueos y tráfico por proceso en vivo.</p><div class="key"><span class="key-inline">pestaña Red</span></div></div>
+        <div class="card"><h3>Servicios y autostart</h3><p>Activa o habilita servicios de systemd y elige qué arranca al iniciar sesión.</p><div class="key"><span class="key-inline">dashboard</span></div></div>
+        <div class="card"><h3>Menú de energía</h3><p>Apagar, reiniciar o cerrar sesión con una tecla, sobre un fondo desenfocado.</p><div class="key"><span class="key-inline">ícono de power</span></div></div>
+        <div class="card"><h3>Pantalla de login</h3><p>Tema de SDDM propio que sigue el fondo y los colores del tema activo.</p><div class="key"><span class="key-inline">SDDM</span></div></div>
+        <div class="card"><h3>Modo cine</h3><p>Manda la ventana a 🎬, apaga el otro monitor y silencia notificaciones.</p><div class="key"><span class="key-inline">SUPER + SHIFT + C</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Atajos -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Atajos</p>
+        <h2>Todo a una tecla.</h2>
+        <p>Los más usados. <span class="key-inline">SUPER + H</span> muestra la lista completa.</p>
+      </div>
+      <div class="keys reveal" id="keys"></div>
+    </div>
+  </section>
+
+  <!-- Instalador -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Instalación</p>
+        <h2>Pensado para quien recién llega a Linux.</h2>
+        <p>Una barra de progreso y nada más. Si algo falla, te muestra el registro; si no, solo te pide reiniciar.</p>
+      </div>
+      <div class="steps reveal">
+        <div class="card step"><h3>Respalda</h3><p>Todo lo que el repo reemplaza se mueve a <code>~/.config-respaldo-&lt;fecha&gt;</code>. No se borra nada.</p></div>
+        <div class="card step"><h3>Pregunta lo mínimo</h3><p>Distribución del teclado y qué extras quieres, en un menú con flechas y espacio.</p></div>
+        <div class="card step"><h3>Instala y configura</h3><p>Actualiza el sistema, reintenta con otros espejos si una descarga falla y pone el tema predeterminado.</p></div>
+        <div class="card step"><h3>Te dice qué hizo</h3><p>Un resumen con paquetes nuevos, servicios y archivos tocados, para auditarlo si quieres.</p></div>
+      </div>
+      <div class="term reveal" aria-label="Ejemplo de salida del instalador">
+        <div><span class="ok">✓</span> Teclado: Latinoamérica</div>
+        <div><span class="ok">✓</span> Extras: Brave Origin, Shelly, Vesktop</div>
+        <div><span class="ok">✓</span> Contraseña ingresada</div>
+        <div>&nbsp;</div>
+        <div><span class="bar-fill">[█████████████████████░░░░░░░░░]</span> 71%  <span class="dim">Instalando vesktop…</span></div>
+      </div>
+      <div class="extras reveal">
+        <div class="mode-label">Extras opcionales · después también con <code>ff-extras</code> o desde el lanzador</div>
+        <div class="chips" id="extras"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bajo el capó -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Bajo el capó</p>
+        <h2>Ligero por diseño.</h2>
+      </div>
+      <div class="under reveal">
+        <div class="card"><div class="num">70 → 12 MB</div><h3>Un solo proceso de fondo</h3><p>Alarmas, ecualizador y registro del firewall corren como hilos de <code>ff-core</code>. Lo periódico va como timers de systemd, sin proceso entre corridas.</p></div>
+        <div class="card"><div class="num">~86 MB</div><h3>La barra pesa lo mismo que Waybar</h3><p>Habla directo con los sockets de Hyprland, sin lanzar <code>hyprctl</code> en cada evento.</p></div>
+        <div class="card"><div class="num">0</div><h3>Ventanas congeladas</h3><p>Cada comando lento corre en otro hilo con timeout; la interfaz nunca espera a <code>nmcli</code> ni a <code>bluetoothctl</code>.</p></div>
+        <div class="card"><div class="num">es · en</div><h3>Traducible</h3><p>Todo texto pasa por un archivo JSON por idioma. Sumar uno es agregar un archivo, sin tocar código.</p></div>
+        <div class="card"><div class="num">ff-*</div><h3>Procesos con nombre</h3><p>Cada daemon se identifica en la lista de procesos: <code>ff-bar</code>, <code>ff-core</code>, <code>ff-radio</code>…</p></div>
+        <div class="card"><div class="num">GPL-3.0</div><h3>Software libre</h3><p>Todo el código está en GitHub. Léelo, cámbialo, quédate con lo que te sirva.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="cta reveal">
+      <p class="eyebrow">Listo para probar</p>
+      <h2>Instala CachyOS Hyprland y pega esto.</h2>
+      <p>Tus archivos actuales quedan respaldados. Al terminar, reinicia y listo.</p>
+      <div class="cmd">
+        <code>curl -fsSL shb3r.github.io/i | bash</code>
+        <button class="btn copy" type="button">Copiar</button>
+      </div>
+    </div>
+  </div>
 </main>
+
+<footer>
+  <div class="wrap">
+    <span><a href="https://github.com/ralf-jar/shb3r-dots">shb3r-dots</a> · GPL-3.0</span>
+    <span>Fondos de <a href="https://ultrawidewallpapers.net">Ultrawide Wallpapers</a>; no son contenido propio.</span>
+  </div>
+</footer>
+
 <script>
-  const btn = document.getElementById("copy");
-  btn.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(document.getElementById("cmd").textContent);
-      btn.textContent = "¡Copiado!";
-    } catch {
-      btn.textContent = "Selecciónalo y copia";
-    }
-    setTimeout(() => { btn.textContent = "Copiar"; }, 2000);
+  const TABS = [
+    ["Sistema", "Lo de todos los días.", "Brillo de cada monitor por DDC, actualizaciones pendientes y switches rápidos: VPN, No molestar, contraste alto, y toda la configuración de la barra.",
+      ["Brillo DDC", "Actualizaciones", "VPN", "No molestar", "Contraste alto", "Barra en vivo"]],
+    ["Personalización", "Cómo se ve todo.", "Fuente, cursor, íconos, pantalla de arranque e idioma, cada uno con su tienda. Y para las ventanas: animaciones, blur, opacidad, bordes, gaps y redondeo.",
+      ["Fuentes", "Cursores", "Íconos", "Plymouth", "Idioma", "Blur", "Gaps", "Redondeo"]],
+    ["Aplicaciones", "El lanzador, a tu medida.", "Oculta apps arrastrándolas, cámbiales nombre o ícono, y arrastra a la zona de desinstalar: detecta si es pacman, Flatpak, AppImage, Steam o Waydroid.",
+      ["Ocultar apps", "Renombrar", "Desinstalar arrastrando", "Opciones del lanzador"]],
+    ["Procesos", "Qué está usando tu PC.", "Procesos agrupados por nombre con RAM y CPU, para cerrar un grupo completo. Clic en la línea de disco abre el mapa de uso.",
+      ["Agrupados", "RAM / CPU", "Cerrar grupo", "Uso de disco"]],
+    ["Red", "Conexión y firewall.", "Wifi (solo redes cifradas), IP, DNS y gateway, tráfico por proceso, configuración de VPN con rutinas para ProtonVPN, Mullvad, WARP, Tailscale y más, y la ventana de UFW.",
+      ["Wifi", "Tráfico por app", "UFW", "Rutinas VPN"]],
+    ["Bluetooth", "Sin bluetoothctl.", "Emparejar, conectar y olvidar con un switch, y autoconexión al iniciar sesión con retraso por dispositivo.",
+      ["Emparejar", "Conectar", "Autoconexión"]],
+    ["Sonido", "Mezclador y ecualizador.", "Volumen por app, salida de audio, y un ecualizador de 6 bandas en PipeWire con preajustes que sigue al dispositivo activo.",
+      ["Por app", "Salida", "EQ 6 bandas", "Preajustes"]],
+    ["Monitores", "Acomoda tus pantallas.", "Resolución, refresco, escala, rotación, duplicar o extender, monitor principal y a qué pantalla va el touch, arrastrando en un lienzo.",
+      ["Lienzo", "Escala", "Rotación", "Espejo", "Touch"]],
+  ];
+
+  const tabsEl = document.getElementById("tabs");
+  const panel = document.getElementById("panel");
+  function selectTab(i) {
+    const [, title, text, chips] = TABS[i];
+    [...tabsEl.children].forEach((b, j) => b.setAttribute("aria-selected", i === j));
+    panel.innerHTML = `<div><h3>${title}</h3><p>${text}</p></div><div class="chips">${chips.map(c => `<span class="chip">${c}</span>`).join("")}</div>`;
+  }
+  TABS.forEach(([name], i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.role = "tab";
+    b.textContent = name;
+    b.addEventListener("click", () => selectTab(i));
+    tabsEl.append(b);
   });
+  selectTab(0);
+
+  const KEYS = [
+    [["SUPER", "+"], "Dashboard"],
+    [["SUPER", "SPACE"], "Lanzador de apps"],
+    [["SUPER", "T"], "Terminal"],
+    [["SUPER", "E"], "Archivos"],
+    [["SUPER", "B"], "Navegador"],
+    [["SUPER", "P"], "Galería de temas"],
+    [["SUPER", "M"], "Música (M + flechas: canción y volumen)"],
+    [["SUPER", "D"], "Descargas"],
+    [["SUPER", "A"], "Audiolibros"],
+    [["SUPER", "N"], "Notificaciones"],
+    [["SUPER", "S"], "Captura por región"],
+    [["SUPER", "W"], "Mostrar u ocultar la barra"],
+    [["SUPER", "Q"], "Cerrar ventana"],
+    [["SUPER", "CTRL", "TAB"], "Collage de ventanas"],
+    [["SUPER", "SHIFT", "G"], "Mandar ventana a gaming"],
+    [["SUPER", "SHIFT", "C"], "Modo cine"],
+    [["SUPER", "CTRL", "↑↓"], "Volumen de la ventana con foco"],
+    [["SUPER", "H"], "Todos los atajos"],
+  ];
+  document.getElementById("keys").innerHTML = KEYS.map(([combo, what]) =>
+    `<div class="keyrow"><span>${what}</span><span class="combo">${combo.map(k => `<kbd>${k}</kbd>`).join("")}</span></div>`).join("");
+
+  const EXTRAS = ["Brave Origin*", "Shelly*", "Vesktop", "ZapZap", "Stremio", "OnlyOffice", "GIMP", "OBS Studio", "DaVinci Resolve", "VLC", "Galculator", "Audiolibros + Piper", "Steam", "Millennium", "OpenRGB", "Overskride"];
+  document.getElementById("extras").innerHTML = EXTRAS.map(e => e.endsWith("*")
+    ? `<span class="chip def" title="Marcado por defecto">${e.slice(0, -1)} ★</span>`
+    : `<span class="chip">${e}</span>`).join("");
+
+  document.querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText("curl -fsSL shb3r.github.io/i | bash");
+      btn.textContent = "Copiado";
+    } catch {
+      btn.textContent = "Selecciónalo";
+    }
+    setTimeout(() => btn.textContent = "Copiar", 1600);
+  }));
+
+  const dateEl = document.getElementById("date");
+  const timeEl = document.getElementById("time");
+  // Reloj compacto, como el de la barra (AM/PM a mano)
+  function tick() {
+    const d = new Date();
+    const day = d.toLocaleDateString("es-MX", { weekday: "short" }).replace(".", "");
+    const mon = d.toLocaleDateString("es-MX", { month: "short" }).replace(".", "");
+    const h = d.getHours() % 12 || 12;
+    const m = String(d.getMinutes()).padStart(2, "0");
+    dateEl.textContent = `${day[0].toUpperCase()}${day.slice(1)} ${d.getDate()} de ${mon} `;
+    timeEl.textContent = `${h}:${m} ${d.getHours() < 12 ? "AM" : "PM"}`;
+  }
+  tick();
+  setInterval(tick, 10000);
+
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 </script>
 </body>
 </html>
