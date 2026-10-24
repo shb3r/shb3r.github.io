@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>shb3r-dots · flipfrog</title>
-<meta name="description" content="Escritorio completo para Hyprland en CachyOS: barra propia, dashboard, themer, más de 20 apps integradas. Se instala con un solo comando.">
+<title>shb3r-dots · Linux sin miedo</title>
+<meta name="description" content="Un escritorio Linux bonito y personalizable para quien viene de Windows: tus programas o sus alternativas, ajustes con clics y un solo comando para instalarlo.">
 <link rel="icon" href="assets/frog.gif">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -205,6 +205,7 @@
     margin-bottom: 10px;
   }
   .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+  .grid.three { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
 
   /* Barra: dos columnas */
   .split { display: grid; gap: 28px; grid-template-columns: 1.1fr 1fr; align-items: start; }
@@ -356,9 +357,59 @@
   .extras { margin-top: 22px; }
   .extras .chip.def { border-color: var(--road); color: var(--fg); }
 
-  /* Bajo el capó */
-  .under { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
-  .under .num { font: 700 1.6rem "Space Grotesk"; color: var(--accent); }
+  /* De Windows a flipfrog */
+  .map { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  .map-row {
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--panel-solid);
+    border: 1px solid var(--border);
+  }
+  .map-row .win { color: var(--muted); font-size: 15px; }
+  .map-row .arrow { color: var(--road); font-family: var(--mono); }
+  .map-row .here b { display: block; font-size: 15px; }
+  .map-row .here .key-inline { margin-top: 6px; }
+
+  /* Compatibilidad */
+  .compat { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .compat .card:hover { transform: none; }
+  .compat h3 { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; margin-bottom: 4px; }
+  .compat .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .compat .sub { color: var(--muted); font-size: 14px; margin: 0 0 16px; }
+  .compat ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .compat li { font-size: 15px; color: #cfd5d2; }
+  .compat li b { color: var(--fg); font-weight: 500; }
+  .compat li .alt { color: var(--accent); }
+  .ok-c { background: #8fd18a; }
+  .alt-c { background: var(--road); }
+  .no-c { background: #d16f6f; }
+  .note { margin-top: 18px; color: var(--muted); font-size: 15px; max-width: 760px; }
+  .note a, .faq a, .step a { color: var(--accent); }
+
+  /* Preguntas */
+  .faq { display: grid; gap: 10px; max-width: 820px; }
+  .faq details {
+    background: var(--panel-solid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0 18px;
+  }
+  .faq details[open] { border-color: var(--border-strong); }
+  .faq summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 16px 0;
+    font-weight: 500;
+    display: flex; justify-content: space-between; gap: 12px;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--road); font-family: var(--mono); }
+  .faq details[open] summary::after { content: "−"; }
+  .faq details p { margin: 0 0 16px; color: #cfd5d2; }
+  .faq summary:focus-visible { outline: 2px solid var(--road); border-radius: 6px; }
+
+  .step code, .faq code { font: 0.9em var(--mono); color: var(--accent); }
 
   /* CTA final */
   .cta {
@@ -371,8 +422,8 @@
       url("assets/dragon-blue.jpg") center / cover;
     border: 1px solid var(--border-strong);
   }
-  .cta .cmd { margin: 26px auto 0; text-align: left; }
-  .cta p { color: #cfd5d2; margin: 10px auto 0; max-width: 520px; }
+  .cta .hero-links { justify-content: center; }
+  .cta p { color: #cfd5d2; margin: 10px auto 0; max-width: 560px; }
 
   footer {
     padding: 48px 0 40px;
@@ -398,7 +449,7 @@
     .bar.mini { font-size: 9px; }
     .cmd { flex-wrap: wrap; }
     .cmd code { flex-basis: 100%; }
-    .keys { grid-template-columns: 1fr; }
+    .keys, .map { grid-template-columns: 1fr; }
     .keyrow { flex-wrap: wrap; }
     .tab-panel { padding: 20px; }
   }
@@ -439,17 +490,13 @@
   </nav>
 
   <div class="wrap hero-body">
-    <p class="eyebrow">flipfrog · Hyprland · CachyOS</p>
-    <h1>shb3r<span>-dots</span></h1>
-    <p class="lead">Un escritorio completo hecho a mano sobre Hyprland: barra propia, panel de control, temas que pintan todo el sistema y más de veinte apps integradas. Se instala con un solo comando.</p>
-    <div class="cmd">
-      <code>curl -fsSL shb3r.github.io/i | bash</code>
-      <button class="btn copy" type="button">Copiar</button>
-    </div>
+    <p class="eyebrow">¿Vienes de Windows? Empieza aquí</p>
+    <h1>Linux, a tu <span>manera</span>.</h1>
+    <p class="lead">Un escritorio bonito, rápido y totalmente personalizable, listo para usar desde el primer día. Tus programas o sus alternativas, ajustes con clics y una sola vez la terminal: para instalarlo.</p>
     <div class="hero-links">
-      <a class="btn ghost" href="https://github.com/ralf-jar/shb3r-dots">Ver en GitHub</a>
-      <a class="btn ghost" href="#todo">Qué trae</a>
-      <span class="req">Requiere CachyOS, edición Hyprland.</span>
+      <a class="btn" href="#empezar">Cómo empezar</a>
+      <a class="btn ghost" href="#programas">¿Y mis programas?</a>
+      <a class="btn ghost" href="#preguntas">Preguntas frecuentes</a>
     </div>
   </div>
 </header>
@@ -457,66 +504,95 @@
 <main>
   <div class="wrap">
     <div class="stats reveal">
-      <div class="stat"><b>1</b><span>comando para instalar</span></div>
-      <div class="stat"><b>8</b><span>pestañas en el dashboard</span></div>
-      <div class="stat"><b>20+</b><span>popups y apps propias</span></div>
-      <div class="stat"><b>12 MB</b><span>todos los daemons juntos</span></div>
-      <div class="stat"><b>2</b><span>idiomas: español e inglés</span></div>
+      <div class="stat"><b>1</b><span>comando, solo al instalar</span></div>
+      <div class="stat"><b>0</b><span>archivos de configuración que editar</span></div>
+      <div class="stat"><b>16</b><span>apps opcionales en un clic</span></div>
+      <div class="stat"><b>$0</b><span>gratis y de código abierto</span></div>
+      <div class="stat"><b>es · en</b><span>en español o inglés</span></div>
     </div>
   </div>
 
-  <!-- Barra -->
-  <section id="todo">
+  <!-- De Windows a flipfrog -->
+  <section id="windows">
     <div class="wrap">
       <div class="sec-head reveal">
-        <p class="eyebrow">La barra</p>
-        <h2>Una barra propia, no Waybar.</h2>
-        <p>Escrita en Python + GTK3 desde cero. Todo cambia en vivo: tema, fuente, redondeo, módulos. Nunca se reinicia.</p>
+        <p class="eyebrow">Lo que ya conoces</p>
+        <h2>Todo tiene su equivalente.</h2>
+        <p>Cambia el aspecto, no la idea. La tecla <span class="key-inline">SUPER</span> es la tecla de Windows de tu teclado.</p>
       </div>
-      <div class="split">
-        <ul class="check reveal">
-          <li><b>Islas o cápsula</b>, fondo transparente o barra completa: se cambia con un switch y se ve al instante.</li>
-          <li><b>Workspaces con íconos de apps</b>: agrupar ventanas por app, compactar los que no se ven, clic medio cierra.</li>
-          <li><b>Tray completo</b> (StatusNotifier + DBusMenu) con íconos que siguen el color del tema.</li>
-          <li><b>Reloj con degradado</b>, formato corto o extendido; clic abre el calendario, clic derecho las alarmas.</li>
-          <li><b>Métricas de uso</b>: RAM, CPU, GPU y temperaturas (NVIDIA o AMD).</li>
-          <li><b>Indicadores</b> visibles solo cuando realmente importan.</li>
-          <li><b>Animaciones elegantes</b> en la entrada y salida de los popups.</li>
-        </ul>
-        <div class="modes reveal">
-          <div>
-            <div class="mode-label">Islas</div>
-            <div class="mini-bg">
-              <nav class="bar mini" aria-label="Réplica de la barra en modo islas">
-                <div class="side">
-                  <div class="island frog-pill"><img class="frog" src="assets/frog.gif" alt=""></div>
-                  <div class="island ws-pill">
-                    <span class="wsb"><b>1</b><svg class="ico"><use href="#i-code"/></svg><svg class="ico"><use href="#i-web"/></svg><svg class="ico"><use href="#i-term"/></svg></span>
-                    <span class="wsb active"><b>2</b><svg class="ico"><use href="#i-code"/></svg></span>
-                  </div>
-                </div>
-                <div class="island clock-pill"><span class="clock">Vie 23 de oct 1:26 PM</span></div>
-                <div class="side right">
-                  <div class="island tray"><svg class="ico"><use href="#i-head"/></svg><svg class="ico"><use href="#i-chat"/></svg><svg class="ico"><use href="#i-game"/></svg><svg class="ico"><use href="#i-bulb"/></svg><svg class="ico"><use href="#i-bell"/></svg><svg class="ico"><use href="#i-bt"/></svg><svg class="ico"><use href="#i-vol"/></svg></div>
-                  <div class="island"><span class="power"><svg class="pw"><use href="#i-pw"/></svg></span></div>
-                </div>
-              </nav>
-            </div>
-          </div>
-          <div>
-            <div class="mode-label">Cápsula</div>
-            <div class="mini-bg capsule">
-              <div class="capsule-bar">
-                <div class="island">
-                  <img class="frog" src="assets/frog.gif" alt="">
-                  <span class="wsb"><b>1</b><svg class="ico"><use href="#i-code"/></svg><svg class="ico"><use href="#i-web"/></svg></span><span class="wsb active"><b>2</b><svg class="ico"><use href="#i-code"/></svg></span>
-                  <span class="clock">Vie 23 de oct 1:26 PM</span>
-                  <span class="power"><svg class="pw"><use href="#i-pw"/></svg></span>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="map reveal">
+        <div class="map-row"><span class="win">Menú Inicio</span><span class="arrow">→</span><span class="here"><b>Lanzador de apps</b><span class="key-inline">SUPER + SPACE</span></span></div>
+        <div class="map-row"><span class="win">Configuración / Panel de control</span><span class="arrow">→</span><span class="here"><b>Dashboard</b><span class="key-inline">SUPER + +</span></span></div>
+        <div class="map-row"><span class="win">Explorador de archivos</span><span class="arrow">→</span><span class="here"><b>Thunar</b><span class="key-inline">SUPER + E</span></span></div>
+        <div class="map-row"><span class="win">Microsoft Store</span><span class="arrow">→</span><span class="here"><b>Shelly</b><span class="key-inline">desde el lanzador</span></span></div>
+        <div class="map-row"><span class="win">Administrador de tareas</span><span class="arrow">→</span><span class="here"><b>Pestaña Procesos</b><span class="key-inline">en el dashboard</span></span></div>
+        <div class="map-row"><span class="win">Alt + Tab</span><span class="arrow">→</span><span class="here"><b>Collage de ventanas</b><span class="key-inline">SUPER + CTRL + TAB</span></span></div>
+        <div class="map-row"><span class="win">Barra de tareas y reloj</span><span class="arrow">→</span><span class="here"><b>La barra de arriba</b><span class="key-inline">clic en cada ícono</span></span></div>
+        <div class="map-row"><span class="win">Recortes</span><span class="arrow">→</span><span class="here"><b>Captura por región</b><span class="key-inline">SUPER + S</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compatibilidad -->
+  <section id="programas">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Tus programas</p>
+        <h2>¿Va a funcionar lo que uso?</h2>
+        <p>La mayoría sí. Lo que no, casi siempre tiene una alternativa gratuita. Y lo que no tiene alternativa te lo decimos aquí, antes de que instales.</p>
+      </div>
+      <div class="compat reveal">
+        <div class="card">
+          <h3><i class="dot ok-c"></i>Funcionan igual</h3>
+          <p class="sub">Tienen versión para Linux.</p>
+          <ul>
+            <li><b>Navegadores</b>: Brave, Chrome, Firefox</li>
+            <li><b>Discord</b> (como Vesktop), Spotify, Zoom</li>
+            <li><b>Steam</b> y miles de juegos de Windows con Proton</li>
+            <li><b>OBS Studio</b>, VLC, DaVinci Resolve</li>
+            <li><b>Microsoft 365 y Google Docs</b> en el navegador</li>
+          </ul>
         </div>
+        <div class="card">
+          <h3><i class="dot alt-c"></i>Con alternativa</h3>
+          <p class="sub">Hacen lo mismo, con otro nombre.</p>
+          <ul>
+            <li><b>Word, Excel, PowerPoint</b> → <span class="alt">OnlyOffice</span></li>
+            <li><b>Photoshop</b> → <span class="alt">GIMP</span></li>
+            <li><b>WhatsApp de escritorio</b> → <span class="alt">ZapZap</span></li>
+            <li><b>Software de luces RGB</b> → <span class="alt">OpenRGB</span></li>
+            <li><b>Calculadora</b> → <span class="alt">Galculator</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><i class="dot no-c"></i>No funcionan</h3>
+          <p class="sub">Mejor saberlo desde ahora.</p>
+          <ul>
+            <li><b>Adobe</b> (Photoshop, Premiere, Illustrator) en su versión original</li>
+            <li><b>Juegos con anticheat de kernel</b>: Valorant, League of Legends, Fortnite</li>
+            <li><b>Office original</b> instalado (la versión web sí funciona)</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note reveal">¿Tu juego no aparece? Búscalo en <a href="https://www.protondb.com">ProtonDB</a> (funciona o no con Proton) y en <a href="https://areweanticheatyet.com">Are We Anti-Cheat Yet?</a> (juegos en línea con anticheat). Si dependes de algo de la columna roja, puedes conservar Windows en la misma PC y elegir cuál usar al encender.</p>
+    </div>
+  </section>
+
+  <!-- Sin consola -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Sin terminal</p>
+        <h2>Lo de todos los días, con clics.</h2>
+        <p>Linux tiene fama de pedir comandos para todo. Aquí cada ajuste común tiene su botón.</p>
+      </div>
+      <div class="grid three reveal">
+        <div class="card"><span class="tag">INSTALAR</span><h3>Una tienda de apps</h3><p>Shelly busca, instala y actualiza programas, como una tienda. Las apps recomendadas también se instalan desde el lanzador.</p></div>
+        <div class="card"><span class="tag">DESINSTALAR</span><h3>Arrastrar y listo</h3><p>En el dashboard arrastras una app a "Desinstalar". Detecta sola cómo se instaló y te muestra qué va a quitar antes.</p></div>
+        <div class="card"><span class="tag">CONEXIONES</span><h3>Wifi, Bluetooth y VPN</h3><p>Conectar, emparejar audífonos o prender la VPN es un switch, igual que en Windows.</p></div>
+        <div class="card"><span class="tag">PANTALLAS</span><h3>Monitores</h3><p>Resolución, escala y posición de cada pantalla arrastrándolas en un lienzo.</p></div>
+        <div class="card"><span class="tag">SONIDO</span><h3>Volumen por app</h3><p>Elige la salida de audio, ajusta cada programa por separado y usa un ecualizador.</p></div>
+        <div class="card"><span class="tag">AVISOS</span><h3>Actualizaciones</h3><p>La barra te avisa cuando hay actualizaciones; no tienes que acordarte de revisar.</p></div>
       </div>
     </div>
   </section>
@@ -526,8 +602,8 @@
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">Dashboard · <span class="key-inline">SUPER + +</span></p>
-        <h2>Todo el sistema en un panel.</h2>
-        <p>Personaliza cada aspecto, desde lo visual, hasta tus tipos de conexiones, seguridad y monitores.</p>
+        <h2>Tu panel de control.</h2>
+        <p>Todo lo que en Windows está repartido entre Configuración, Panel de control y el Administrador de tareas, en un solo lugar.</p>
       </div>
       <div class="dash reveal">
         <div class="tabs" role="tablist" id="tabs"></div>
@@ -540,9 +616,9 @@
   <section>
     <div class="wrap">
       <div class="sec-head reveal">
-        <p class="eyebrow">Themer</p>
-        <h2>Un tema para pintarlos a todos.</h2>
-        <p>Cada tema son 8 colores y un fondo (imagen, gif o video). Al aplicarlo, se sincroniza a cada app que lo soporte, sin cerrar nada.</p>
+        <p class="eyebrow">Hazlo tuyo</p>
+        <h2>Cambia todo el look con un clic.</h2>
+        <p>Un tema es un fondo (imagen, gif o video) y sus colores. Al elegirlo se pinta todo: la barra, las ventanas, la terminal, el navegador y hasta la pantalla de inicio de sesión.</p>
       </div>
       <div class="themes reveal">
         <div class="theme-card">
@@ -560,17 +636,11 @@
           </div>
         </div>
       </div>
-      <div class="sync reveal">
-        <span class="from">colors.css</span><span class="arrow">→</span>
-        <span class="chip">Hyprland</span><span class="chip">Barra y popups</span><span class="chip">GTK 3/4</span><span class="chip">Qt / KDE</span><span class="chip">Kitty</span><span class="chip">Dunst</span><span class="chip">Fastfetch</span><span class="chip">btop</span><span class="chip">Brave</span><span class="chip">Zen</span><span class="chip">Vesktop</span><span class="chip">Steam (Millennium)</span><span class="chip">Pantalla de login (SDDM)</span>
-      </div>
       <div class="grid reveal" style="margin-top:22px">
-        <div class="card"><span class="tag">SUPER + P</span><h3>Galería de temas</h3><p>Pantalla casi completa con miniaturas, favoritos y filtros por imágenes, videos o favoritos.</p></div>
-        <div class="card"><span class="tag">EDITOR</span><h3>Crea tus temas</h3><p>Ajusta cada color con alpha, o deja que el editor saque la paleta del fondo.</p></div>
-        <div class="card"><span class="tag">ROTACIÓN</span><h3>Cambia solo</h3><p>Rotación automática entre favoritos cada N horas, con un timer de systemd, sin proceso de fondo.</p></div>
-        <div class="card"><span class="tag">ESTILO</span><h3>Redondeo y fuente globales</h3><p>Un número controla las esquinas de todo, ventanas incluidas. La fuente y su tamaño, igual.</p></div>
-        <div class="card"><span class="tag">VISTA PREVIA</span><h3>Cursores, íconos y arranque</h3><p>Selectores con vista previa real y descarga desde los repos o la KDE Store, también para Plymouth.</p></div>
-        <div class="card"><span class="tag">JUEGOS</span><h3>Fondo fijo al jugar</h3><p>Con un juego o el modo cine, un fondo de video se congela en un cuadro para no gastar GPU.</p></div>
+        <div class="card"><span class="tag">SUPER + P</span><h3>Galería de temas</h3><p>Todos tus temas con miniaturas. Clic en uno y se aplica al momento, sin reiniciar.</p></div>
+        <div class="card"><span class="tag">EDITOR</span><h3>Crea el tuyo</h3><p>Elige un fondo y el editor saca los colores de la imagen. Ajústalos si quieres y guárdalo.</p></div>
+        <div class="card"><span class="tag">ESTILO</span><h3>Fuentes, cursores e íconos</h3><p>Con vista previa antes de aplicar, y miles más para descargar sin salir del panel.</p></div>
+        <div class="card"><span class="tag">ROTACIÓN</span><h3>Que cambie solo</h3><p>Marca tus favoritos y el fondo cambia cada cierto número de horas.</p></div>
       </div>
     </div>
   </section>
@@ -579,27 +649,52 @@
   <section>
     <div class="wrap">
       <div class="sec-head reveal">
-        <p class="eyebrow">Apps propias</p>
-        <h2>Lo que normalmente instalarías aparte, ya integrado.</h2>
-        <p>Todas comparten el tema, el idioma y el mismo estilo. Las que reproducen o descargan siguen trabajando aunque cierres la ventana.</p>
+        <p class="eyebrow">Incluido</p>
+        <h2>Apps que ya vienen listas.</h2>
+        <p>Comparten el tema y el idioma. Cada una se abre con una tecla o desde la barra.</p>
       </div>
       <div class="grid apps reveal">
-        <div class="card"><h3>Lanzador</h3><p>Búsqueda, categorías editables, apps más usadas. Termina con "?" y pregunta a Claude.</p><div class="key"><span class="key-inline">SUPER + SPACE</span></div></div>
-        <div class="card"><h3>Descubre Bandcamp</h3><p>Radio por tags, artista o wishlist, y tu música local. Autoecualizador según el género.</p><div class="key"><span class="key-inline">SUPER + M</span></div></div>
-        <div class="card"><h3>Descargas</h3><p>MediaFire, Google Drive, MEGA, YouTube (MP3 o MP4) y torrents. Pausa y reanuda.</p><div class="key"><span class="key-inline">SUPER + D</span></div></div>
-        <div class="card"><h3>Audiolibros</h3><p>Convierte un EPUB en MP3 narrado con Piper y lo lee con el texto sincronizado.</p><div class="key"><span class="key-inline">SUPER + A</span></div></div>
-        <div class="card"><h3>Collage de ventanas</h3><p>Todas las ventanas de todos los workspaces en vivo. Arrastra para moverlas de workspace.</p><div class="key"><span class="key-inline">SUPER + CTRL + TAB</span></div></div>
-        <div class="card"><h3>Notificaciones</h3><p>Historial agrupado por día, volver a mostrar, borrar y No molestar que sobrevive al reinicio.</p><div class="key"><span class="key-inline">SUPER + N</span></div></div>
-        <div class="card"><h3>Calendario</h3><p>Notas por día en tu propio servidor CalDAV, sincronizadas con Android con un QR.</p><div class="key"><span class="key-inline">clic en el reloj</span></div></div>
-        <div class="card"><h3>Alarmas</h3><p>Una vez o por días de la semana. Suenan aunque estés jugando.</p><div class="key"><span class="key-inline">clic derecho en el reloj</span></div></div>
-        <div class="card"><h3>Atajos</h3><p>Todos los atajos de teclado, leídos de la config real. Puede abrirse al iniciar sesión.</p><div class="key"><span class="key-inline">SUPER + H</span></div></div>
-        <div class="card"><h3>Google Fonts</h3><p>Busca, previsualiza e instala cualquier fuente de Google en un clic.</p><div class="key"><span class="key-inline">Personalización</span></div></div>
-        <div class="card"><h3>Uso de disco</h3><p>Árbol tipo TreeSize de todo el disco, en unos segundos.</p><div class="key"><span class="key-inline">pestaña Procesos</span></div></div>
-        <div class="card"><h3>Firewall</h3><p>Reglas de UFW, registro de bloqueos y tráfico por proceso en vivo.</p><div class="key"><span class="key-inline">pestaña Red</span></div></div>
-        <div class="card"><h3>Servicios y autostart</h3><p>Activa o habilita servicios de systemd y elige qué arranca al iniciar sesión.</p><div class="key"><span class="key-inline">dashboard</span></div></div>
-        <div class="card"><h3>Menú de energía</h3><p>Apagar, reiniciar o cerrar sesión con una tecla, sobre un fondo desenfocado.</p><div class="key"><span class="key-inline">ícono de power</span></div></div>
-        <div class="card"><h3>Pantalla de login</h3><p>Tema de SDDM propio que sigue el fondo y los colores del tema activo.</p><div class="key"><span class="key-inline">SDDM</span></div></div>
-        <div class="card"><h3>Modo cine</h3><p>Manda la ventana a 🎬, apaga el otro monitor y silencia notificaciones.</p><div class="key"><span class="key-inline">SUPER + SHIFT + C</span></div></div>
+        <div class="card"><h3>Descargas</h3><p>MediaFire, Google Drive, MEGA, YouTube (MP3 o MP4) y torrents, con pausa y reanudación.</p><div class="key"><span class="key-inline">SUPER + D</span></div></div>
+        <div class="card"><h3>Música</h3><p>Radio de Bandcamp por género o artista, y tu propia carpeta de música.</p><div class="key"><span class="key-inline">SUPER + M</span></div></div>
+        <div class="card"><h3>Audiolibros</h3><p>Convierte un libro EPUB en audio narrado y lo lee con el texto en pantalla.</p><div class="key"><span class="key-inline">SUPER + A</span></div></div>
+        <div class="card"><h3>Calendario y alarmas</h3><p>Notas por día que se sincronizan con tu celular Android, y alarmas por día de la semana.</p><div class="key"><span class="key-inline">clic en el reloj</span></div></div>
+        <div class="card"><h3>Notificaciones</h3><p>Historial de avisos del día y modo No molestar.</p><div class="key"><span class="key-inline">SUPER + N</span></div></div>
+        <div class="card"><h3>Modo cine</h3><p>Pon una película en pantalla completa, apaga el otro monitor y silencia los avisos.</p><div class="key"><span class="key-inline">SUPER + SHIFT + C</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instalación -->
+  <section id="empezar">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Cómo empezar</p>
+        <h2>De Windows a tu nuevo escritorio, paso a paso.</h2>
+        <p>Calcula una tarde. Antes de empezar, respalda tus archivos importantes en una USB o en la nube.</p>
+      </div>
+      <div class="steps reveal">
+        <div class="card step"><h3>Descarga CachyOS</h3><p>Es el sistema base, gratis. Bájalo de <a href="https://cachyos.org/download/">cachyos.org</a>: es un archivo <code>.iso</code>.</p></div>
+        <div class="card step"><h3>Prepara una USB</h3><p>Desde Windows, graba el <code>.iso</code> en una USB de 8 GB o más con <a href="https://rufus.ie/es/">Rufus</a>. La USB se borra.</p></div>
+        <div class="card step"><h3>Instala CachyOS</h3><p>Arranca la PC desde la USB y sigue el instalador. Cuando pregunte por el escritorio, elige <b>Hyprland</b>. Si quieres conservar Windows, elige instalar a un lado.</p></div>
+        <div class="card step"><h3>Pega un comando</h3><p>Abre la terminal desde el menú de apps, pega el comando de abajo con <code>Ctrl + Shift + V</code> y presiona Enter.</p></div>
+        <div class="card step"><h3>Contesta y espera</h3><p>Te pregunta tu teclado y qué apps extra quieres. Luego pide tu contraseña: al escribirla no se ve nada, es normal.</p></div>
+        <div class="card step"><h3>Reinicia</h3><p>Al terminar, reinicia. Al entrar verás una guía con los atajos; puedes volver a verla con <code>SUPER + H</code>.</p></div>
+      </div>
+      <div class="cmd reveal" style="margin-top:22px">
+        <code>curl -fsSL shb3r.github.io/i | bash</code>
+        <button class="btn copy" type="button">Copiar</button>
+      </div>
+      <div class="term reveal" aria-label="Ejemplo de lo que verás mientras se instala">
+        <div><span class="ok">✓</span> Teclado: Latinoamérica</div>
+        <div><span class="ok">✓</span> Extras: Brave Origin, Shelly, Vesktop</div>
+        <div><span class="ok">✓</span> Contraseña ingresada</div>
+        <div>&nbsp;</div>
+        <div><span class="bar-fill">[█████████████████████░░░░░░░░░]</span> 71%  <span class="dim">Instalando vesktop…</span></div>
+      </div>
+      <p class="note reveal">Solo verás una barra de progreso. Si algo falla, te muestra qué pasó; si todo sale bien, solo te pide reiniciar. Lo que el instalador reemplaza queda respaldado, no se borra nada.</p>
+      <div class="extras reveal">
+        <div class="mode-label">Apps opcionales · ★ marcadas por defecto · después también desde el lanzador</div>
+        <div class="chips" id="extras"></div>
       </div>
     </div>
   </section>
@@ -609,67 +704,40 @@
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">Atajos</p>
-        <h2>Todo a una tecla.</h2>
-        <p>Los más usados. <span class="key-inline">SUPER + H</span> muestra la lista completa.</p>
+        <h2>No tienes que memorizar nada.</h2>
+        <p>Todo se puede hacer con el mouse. Estos atajos son para ir más rápido, y <span class="key-inline">SUPER + H</span> te los muestra cuando los olvides.</p>
       </div>
       <div class="keys reveal" id="keys"></div>
     </div>
   </section>
 
-  <!-- Instalador -->
-  <section>
+  <!-- Preguntas -->
+  <section id="preguntas">
     <div class="wrap">
       <div class="sec-head reveal">
-        <p class="eyebrow">Instalación</p>
-        <h2>Pensado para quien recién llega a Linux.</h2>
-        <p>Una barra de progreso y nada más. Si algo falla, te muestra el registro; si no, solo te pide reiniciar.</p>
+        <p class="eyebrow">Preguntas frecuentes</p>
+        <h2>Lo que todos preguntan antes.</h2>
       </div>
-      <div class="steps reveal">
-        <div class="card step"><h3>Respalda</h3><p>Todo lo que el repo reemplaza se mueve a <code>~/.config-respaldo-&lt;fecha&gt;</code>. No se borra nada.</p></div>
-        <div class="card step"><h3>Pregunta lo mínimo</h3><p>Distribución del teclado y qué extras quieres, en un menú con flechas y espacio.</p></div>
-        <div class="card step"><h3>Instala y configura</h3><p>Actualiza el sistema, reintenta con otros espejos si una descarga falla y pone el tema predeterminado.</p></div>
-        <div class="card step"><h3>Te dice qué hizo</h3><p>Un resumen con paquetes nuevos, servicios y archivos tocados, para auditarlo si quieres.</p></div>
-      </div>
-      <div class="term reveal" aria-label="Ejemplo de salida del instalador">
-        <div><span class="ok">✓</span> Teclado: Latinoamérica</div>
-        <div><span class="ok">✓</span> Extras: Brave Origin, Shelly, Vesktop</div>
-        <div><span class="ok">✓</span> Contraseña ingresada</div>
-        <div>&nbsp;</div>
-        <div><span class="bar-fill">[█████████████████████░░░░░░░░░]</span> 71%  <span class="dim">Instalando vesktop…</span></div>
-      </div>
-      <div class="extras reveal">
-        <div class="mode-label">Extras opcionales · después también con <code>ff-extras</code> o desde el lanzador</div>
-        <div class="chips" id="extras"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Bajo el capó -->
-  <section>
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Bajo el capó</p>
-        <h2>Ligero por diseño.</h2>
-      </div>
-      <div class="under reveal">
-        <div class="card"><div class="num">70 → 12 MB</div><h3>Un solo proceso de fondo</h3><p>Alarmas, ecualizador y registro del firewall corren como hilos de <code>ff-core</code>. Lo periódico va como timers de systemd, sin proceso entre corridas.</p></div>
-        <div class="card"><div class="num">~86 MB</div><h3>La barra pesa lo mismo que Waybar</h3><p>Habla directo con los sockets de Hyprland, sin lanzar <code>hyprctl</code> en cada evento.</p></div>
-        <div class="card"><div class="num">0</div><h3>Ventanas congeladas</h3><p>Cada comando lento corre en otro hilo con timeout; la interfaz nunca espera a <code>nmcli</code> ni a <code>bluetoothctl</code>.</p></div>
-        <div class="card"><div class="num">es · en</div><h3>Traducible</h3><p>Todo texto pasa por un archivo JSON por idioma. Sumar uno es agregar un archivo, sin tocar código.</p></div>
-        <div class="card"><div class="num">ff-*</div><h3>Procesos con nombre</h3><p>Cada daemon se identifica en la lista de procesos: <code>ff-bar</code>, <code>ff-core</code>, <code>ff-radio</code>…</p></div>
-        <div class="card"><div class="num">GPL-3.0</div><h3>Software libre</h3><p>Todo el código está en GitHub. Léelo, cámbialo, quédate con lo que te sirva.</p></div>
+      <div class="faq reveal">
+        <details><summary>¿Puedo conservar Windows?</summary><p>Sí. Al instalar CachyOS elige instalarlo a un lado de Windows; cada vez que enciendas la PC eliges cuál usar. Respalda tus archivos antes, por si acaso.</p></details>
+        <details><summary>¿Es gratis?</summary><p>Sí. CachyOS y este escritorio son gratis y de código abierto, sin licencias ni suscripciones.</p></details>
+        <details><summary>¿Qué es Hyprland?</summary><p>Es la parte que dibuja las ventanas, como el escritorio de Windows. Acomoda las ventanas solas en mosaico para que no se encimen, y lo puedes cambiar con <code>SUPER + ALT + F</code> si prefieres una ventana flotante.</p></details>
+        <details><summary>¿Necesito saber usar la terminal?</summary><p>Solo para pegar el comando de instalación, una vez. Después, instalar apps, conectarte a internet, cambiar el tema o ajustar las pantallas se hace con clics.</p></details>
+        <details><summary>¿Funcionan mis juegos?</summary><p>Muchos sí, con Steam y Proton, que ya viene integrado. Los que usan anticheat de kernel (Valorant, League of Legends, Fortnite) no. Revisa los tuyos en <a href="https://www.protondb.com">ProtonDB</a>.</p></details>
+        <details><summary>¿Y los drivers de mi tarjeta de video?</summary><p>CachyOS detecta tu hardware e instala los drivers durante la instalación, también los de NVIDIA.</p></details>
+        <details><summary>¿Qué pasa si algo sale mal?</summary><p>El instalador respalda tu configuración antes de cambiarla y, si algo falla, te muestra exactamente qué pasó. Siempre puedes reinstalar CachyOS desde la USB.</p></details>
       </div>
     </div>
   </section>
 
   <div class="wrap">
     <div class="cta reveal">
-      <p class="eyebrow">Listo para probar</p>
-      <h2>Instala CachyOS Hyprland y pega esto.</h2>
-      <p>Tus archivos actuales quedan respaldados. Al terminar, reinicia y listo.</p>
-      <div class="cmd">
-        <code>curl -fsSL shb3r.github.io/i | bash</code>
-        <button class="btn copy" type="button">Copiar</button>
+      <p class="eyebrow">Tu primera vez en Linux</p>
+      <h2>Pruébalo sin miedo.</h2>
+      <p>Si algo no te convence, Windows sigue ahí. Si te gusta, ya tienes un escritorio hecho a tu medida.</p>
+      <div class="hero-links">
+        <a class="btn" href="#empezar">Cómo empezar</a>
+        <a class="btn ghost" href="https://github.com/ralf-jar/shb3r-dots">Ver el código en GitHub</a>
       </div>
     </div>
   </div>
@@ -684,22 +752,22 @@
 
 <script>
   const TABS = [
-    ["Sistema", "Lo de todos los días.", "Brillo de cada monitor por DDC, actualizaciones pendientes y switches rápidos: VPN, No molestar, contraste alto, y toda la configuración de la barra.",
-      ["Brillo DDC", "Actualizaciones", "VPN", "No molestar", "Contraste alto", "Barra en vivo"]],
-    ["Personalización", "Cómo se ve todo.", "Fuente, cursor, íconos, pantalla de arranque e idioma, cada uno con su tienda. Y para las ventanas: animaciones, blur, opacidad, bordes, gaps y redondeo.",
-      ["Fuentes", "Cursores", "Íconos", "Plymouth", "Idioma", "Blur", "Gaps", "Redondeo"]],
-    ["Aplicaciones", "El lanzador, a tu medida.", "Oculta apps arrastrándolas, cámbiales nombre o ícono, y arrastra a la zona de desinstalar: detecta si es pacman, Flatpak, AppImage, Steam o Waydroid.",
-      ["Ocultar apps", "Renombrar", "Desinstalar arrastrando", "Opciones del lanzador"]],
-    ["Procesos", "Qué está usando tu PC.", "Procesos agrupados por nombre con RAM y CPU, para cerrar un grupo completo. Clic en la línea de disco abre el mapa de uso.",
-      ["Agrupados", "RAM / CPU", "Cerrar grupo", "Uso de disco"]],
-    ["Red", "Conexión y firewall.", "Wifi (solo redes cifradas), IP, DNS y gateway, tráfico por proceso, configuración de VPN con rutinas para ProtonVPN, Mullvad, WARP, Tailscale y más, y la ventana de UFW.",
-      ["Wifi", "Tráfico por app", "UFW", "Rutinas VPN"]],
-    ["Bluetooth", "Sin bluetoothctl.", "Emparejar, conectar y olvidar con un switch, y autoconexión al iniciar sesión con retraso por dispositivo.",
+    ["Sistema", "Lo de todos los días.", "Brillo de tus monitores, aviso de actualizaciones y switches rápidos: VPN, No molestar y cómo se ve la barra.",
+      ["Brillo", "Actualizaciones", "VPN", "No molestar", "Barra"]],
+    ["Personalización", "Cómo se ve todo.", "Fuente, cursor, íconos, pantalla de arranque e idioma, cada uno con su tienda para bajar más. Y para las ventanas: animaciones, transparencia, bordes y esquinas.",
+      ["Fuentes", "Cursores", "Íconos", "Idioma", "Animaciones", "Transparencia"]],
+    ["Aplicaciones", "Tu menú de apps.", "Oculta las que no usas, cámbiales nombre o ícono, y desinstala arrastrando.",
+      ["Ocultar", "Renombrar", "Desinstalar arrastrando"]],
+    ["Procesos", "Tu administrador de tareas.", "Qué programas están abiertos, cuánta memoria y procesador usan, y ciérralos si se traban. También muestra qué ocupa espacio en tu disco.",
+      ["Memoria / CPU", "Cerrar programas", "Espacio en disco"]],
+    ["Red", "Internet y seguridad.", "Redes wifi, qué app usa tu internet, VPN y el firewall, sin comandos.",
+      ["Wifi", "Uso por app", "VPN", "Firewall"]],
+    ["Bluetooth", "Audífonos, controles, bocinas.", "Empareja y conecta con un switch, y elige cuáles se conectan solos al encender.",
       ["Emparejar", "Conectar", "Autoconexión"]],
-    ["Sonido", "Mezclador y ecualizador.", "Volumen por app, salida de audio, y un ecualizador de 6 bandas en PipeWire con preajustes que sigue al dispositivo activo.",
-      ["Por app", "Salida", "EQ 6 bandas", "Preajustes"]],
-    ["Monitores", "Acomoda tus pantallas.", "Resolución, refresco, escala, rotación, duplicar o extender, monitor principal y a qué pantalla va el touch, arrastrando en un lienzo.",
-      ["Lienzo", "Escala", "Rotación", "Espejo", "Touch"]],
+    ["Sonido", "Mezclador y ecualizador.", "Volumen por app, elegir bocinas o audífonos, y un ecualizador con preajustes.",
+      ["Por app", "Salida", "Ecualizador"]],
+    ["Monitores", "Acomoda tus pantallas.", "Resolución, frecuencia, escala, rotación, duplicar o extender y cuál es la principal, arrastrándolas.",
+      ["Resolución", "Escala", "Rotación", "Duplicar"]],
   ];
 
   const tabsEl = document.getElementById("tabs");
@@ -720,29 +788,21 @@
   selectTab(0);
 
   const KEYS = [
-    [["SUPER", "+"], "Dashboard"],
-    [["SUPER", "SPACE"], "Lanzador de apps"],
-    [["SUPER", "T"], "Terminal"],
+    [["SUPER", "SPACE"], "Abrir el menú de apps"],
+    [["SUPER", "+"], "Panel de control (dashboard)"],
     [["SUPER", "E"], "Archivos"],
     [["SUPER", "B"], "Navegador"],
-    [["SUPER", "P"], "Galería de temas"],
-    [["SUPER", "M"], "Música (M + flechas: canción y volumen)"],
-    [["SUPER", "D"], "Descargas"],
-    [["SUPER", "A"], "Audiolibros"],
-    [["SUPER", "N"], "Notificaciones"],
-    [["SUPER", "S"], "Captura por región"],
-    [["SUPER", "W"], "Mostrar u ocultar la barra"],
-    [["SUPER", "Q"], "Cerrar ventana"],
-    [["SUPER", "CTRL", "TAB"], "Collage de ventanas"],
-    [["SUPER", "SHIFT", "G"], "Mandar ventana a gaming"],
-    [["SUPER", "SHIFT", "C"], "Modo cine"],
-    [["SUPER", "CTRL", "↑↓"], "Volumen de la ventana con foco"],
-    [["SUPER", "H"], "Todos los atajos"],
+    [["SUPER", "T"], "Terminal"],
+    [["SUPER", "Q"], "Cerrar la ventana"],
+    [["SUPER", "S"], "Captura de pantalla"],
+    [["SUPER", "P"], "Cambiar de tema"],
+    [["SUPER", "1…9"], "Ir a otro escritorio"],
+    [["SUPER", "H"], "Ver todos los atajos"],
   ];
   document.getElementById("keys").innerHTML = KEYS.map(([combo, what]) =>
     `<div class="keyrow"><span>${what}</span><span class="combo">${combo.map(k => `<kbd>${k}</kbd>`).join("")}</span></div>`).join("");
 
-  const EXTRAS = ["Brave Origin*", "Shelly*", "Vesktop", "ZapZap", "Stremio", "OnlyOffice", "GIMP", "OBS Studio", "DaVinci Resolve", "VLC", "Galculator", "Audiolibros + Piper", "Steam", "Millennium", "OpenRGB", "Overskride"];
+  const EXTRAS = ["Brave Origin*", "Shelly*", "Vesktop (Discord)", "ZapZap (WhatsApp)", "Stremio", "OnlyOffice", "GIMP", "OBS Studio", "DaVinci Resolve", "VLC", "Galculator", "Audiolibros", "Steam", "Millennium (temas de Steam)", "OpenRGB", "Overskride (Bluetooth)"];
   document.getElementById("extras").innerHTML = EXTRAS.map(e => e.endsWith("*")
     ? `<span class="chip def" title="Marcado por defecto">${e.slice(0, -1)} ★</span>`
     : `<span class="chip">${e}</span>`).join("");
