@@ -14,7 +14,7 @@
     /* Roles del tema forest-road (predeterminado) */
     --bg: #0b0f0f;
     --bg-2: #111716;
-    --panel: rgba(16, 22, 22, 0.72);
+    --bg-rgb: 11, 15, 15;
     --panel-solid: #141b1b;
     --hover: #222629;
     --fg: #f2f1ec;
@@ -25,6 +25,13 @@
     --road: #e0812f;
     --border: rgba(90, 123, 128, 0.35);
     --border-strong: #5a7b80;
+    --text-2: var(--text-2);
+    --island: rgba(0, 0, 0, 0.40);
+    --kbd: #1d2424;
+    --kbd-border: #39494b;
+    --term: #070909;
+    --wall: url("assets/forest-road.jpg");
+    --wall-cta: url("assets/dragon-blue.jpg");
     --radius: 14px;
     --mono: "JetBrains Mono", ui-monospace, monospace;
     --pixel: "Silkscreen", var(--mono);
@@ -50,15 +57,15 @@
     min-height: clamp(560px, 100svh, 1000px);
     display: flex;
     flex-direction: column;
-    background: url("assets/forest-road.jpg") center 60% / cover no-repeat;
+    background: var(--wall) center 60% / cover no-repeat;
     isolation: isolate;
   }
   .hero::after {
     content: "";
     position: absolute; inset: 0;
     background:
-      linear-gradient(180deg, rgba(11,15,15,0) 40%, var(--bg) 100%),
-      radial-gradient(ellipse at 50% 35%, rgba(11,15,15,0.15), rgba(11,15,15,0.65));
+      linear-gradient(180deg, rgba(var(--bg-rgb), 0) 40%, var(--bg) 100%),
+      radial-gradient(ellipse at 50% 35%, rgba(var(--bg-rgb), 0.15), rgba(var(--bg-rgb), 0.65));
     z-index: -1;
   }
 
@@ -80,12 +87,12 @@
     height: 2.5em;
     padding: 0 .9em;
     border-radius: 25px;
-    background: rgba(0, 0, 0, 0.40);
+    background: var(--island);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     white-space: nowrap;
   }
-  .frog { width: 2em; height: 1.7em; object-fit: contain; image-rendering: pixelated; filter: sepia(1) saturate(.35) brightness(1.2) hue-rotate(10deg); }
+  .frog { width: 2em; height: 1.7em; object-fit: contain; image-rendering: pixelated; }
   .frog-pill { padding: 0 .55em; }
   .ws-pill { padding: 0 .35em; gap: .15em; }
   .wsb {
@@ -96,7 +103,7 @@
     color: var(--fg);
   }
   .wsb b { font-weight: 500; padding: 0 .1em; }
-  .wsb.active { background: #222629; }
+  .wsb.active { background: var(--hover); }
   .wsb.active b { color: var(--accent); font-weight: 800; }
   .ico { width: 1.15em; height: 1.15em; flex: none; }
   .clock-pill { padding: 0 1.45em; justify-self: center; }
@@ -125,11 +132,53 @@
     letter-spacing: -0.03em;
   }
   h1 span { color: var(--accent); }
+
+  /* Selector de tema sobre "personaliza" */
+  .tp {
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    text-decoration: underline dotted var(--teal);
+    text-decoration-thickness: .06em;
+    text-underline-offset: .14em;
+  }
+  .tp:focus-visible { text-decoration-color: var(--road); }
+  .tp-menu {
+    position: absolute; left: 50%; top: 100%;
+    display: flex; gap: 10px;
+    padding: 10px;
+    font-size: 1rem;
+    background: rgba(var(--bg-rgb), .8);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    opacity: 0; visibility: hidden;
+    transform: translate(-50%, 2px);
+    transition: opacity .2s, transform .2s, visibility .2s;
+    z-index: 5;
+  }
+  .tp-menu::before { content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px; }
+  .tp:hover .tp-menu, .tp:focus-within .tp-menu { opacity: 1; visibility: visible; transform: translate(-50%, 10px); }
+  .tp-opt {
+    width: 46px; height: 46px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: center / cover;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
+    cursor: pointer;
+    transition: transform .15s, border-color .2s;
+  }
+  .tp-opt:hover { transform: scale(1.08); }
+  .tp-opt:focus-visible { outline: 2px solid var(--road); outline-offset: 2px; }
+  .tp-opt[aria-pressed="true"] { border-color: var(--accent); }
+  html.theme-anim, html.theme-anim * { transition: background-color .45s, color .45s, border-color .45s, box-shadow .45s !important; }
   .lead {
     max-width: 620px;
     margin: 20px 0 32px;
     font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-    color: #d6dad7;
+    color: var(--text-2);
   }
   .cmd {
     display: flex; align-items: center; gap: 12px;
@@ -209,7 +258,7 @@
   /* Barra: dos columnas */
   .split { display: grid; gap: 28px; grid-template-columns: 1.1fr 1fr; align-items: start; }
   ul.check { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-  ul.check li { padding-left: 26px; position: relative; color: #cfd5d2; }
+  ul.check li { padding-left: 26px; position: relative; color: var(--text-2); }
   ul.check li::before {
     content: ""; position: absolute; left: 4px; top: .55em;
     width: 9px; height: 9px; border-radius: 3px;
@@ -221,7 +270,7 @@
   .mini-bg {
     border-radius: var(--radius);
     padding: 12px;
-    background: url("assets/forest-road.jpg") 70% 70% / 260% auto;
+    background: var(--wall) 70% 70% / 260% auto;
     border: 1px solid var(--border);
     overflow: hidden;
   }
@@ -251,7 +300,7 @@
     overflow: hidden;
     background:
       linear-gradient(rgba(0,0,0,.62), rgba(0,0,0,.62)),
-      url("assets/forest-road.jpg") 30% 40% / cover;
+      var(--wall) 30% 40% / cover;
   }
   .tabs {
     display: flex; gap: 4px;
@@ -275,7 +324,7 @@
   .tabs button:focus-visible { outline: 2px solid var(--road); }
   .tab-panel { padding: 26px; min-height: 230px; display: grid; gap: 22px; grid-template-columns: 1fr 1fr; }
   .tab-panel h3 { font-size: 1.4rem; margin-bottom: 10px; }
-  .tab-panel > div > p { color: #cfd5d2; margin: 0; }
+  .tab-panel > div > p { color: var(--text-2); margin: 0; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; }
   .chip {
     font-size: 13px;
@@ -283,11 +332,11 @@
     border-radius: 999px;
     background: rgba(255,255,255,.06);
     border: 1px solid var(--border);
-    color: #dfe3e1;
+    color: var(--text-2);
   }
 
   /* Themer */
-  .themes { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .themes { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
   .theme-card {
     border-radius: var(--radius);
     overflow: hidden;
@@ -339,10 +388,10 @@
     text-align: center;
     padding: 5px 9px;
     border-radius: 7px;
-    background: #1d2424;
+    background: var(--kbd);
     color: var(--fg);
-    border: 1px solid #39494b;
-    box-shadow: 2px 2px 0 0 #39494b;
+    border: 1px solid var(--kbd-border);
+    box-shadow: 2px 2px 0 0 var(--kbd-border);
   }
 
   /* Instalador */
@@ -358,15 +407,15 @@
   .term {
     margin-top: 22px;
     border-radius: var(--radius);
-    background: #070909;
+    background: var(--term);
     border: 1px solid var(--border);
     padding: 18px 20px;
     font: 13px/1.7 var(--mono);
-    color: #cfd5d2;
+    color: var(--text-2);
     overflow-x: auto;
   }
   .term .ok { color: #8fd18a; }
-  .term .dim { color: #66726f; }
+  .term .dim { color: var(--muted); }
   .term .bar-fill { color: var(--accent); }
   .extras { margin-top: 22px; }
   .extras .chip.def { border-color: var(--road); color: var(--fg); }
@@ -384,9 +433,17 @@
   .sysmon { gap: .9em; font-family: var(--mono); font-size: .95em; }
   .sysmon .r { color: var(--accent); }
   .sysmon .c { color: var(--road); }
-  .sysmon .g { color: #8fb8bd; }
+  .sysmon .g { color: var(--accent-2); }
 
-  .step code, .faq code { font: 0.9em var(--mono); color: var(--accent); }
+  .step-cmd { margin: 14px 0 12px; padding: 8px 8px 8px 14px; flex-wrap: wrap; }
+  .step-cmd { gap: 8px; }
+  .step-cmd { flex-wrap: nowrap; }
+  .step-cmd code { font-size: 0.85rem; }
+  .steps.install { grid-template-columns: 1fr 1.5fr 1fr; }
+  @media (max-width: 860px) { .steps.install { grid-template-columns: 1fr; } }
+  .card .step-hint { font-size: 14px; }
+  .step code, .faq code { font: 0.9em var(--mono); color: var(--accent); white-space: nowrap; }
+  .note-title { display: block; font-size: 1.15rem; color: var(--fg); margin-bottom: 4px; }
   .note { margin-top: 18px; color: var(--muted); font-size: 15px; max-width: 760px; }
   .step a, .faq a { color: var(--accent); }
 
@@ -409,7 +466,7 @@
   .faq summary::-webkit-details-marker { display: none; }
   .faq summary::after { content: "+"; color: var(--road); font-family: var(--mono); }
   .faq details[open] summary::after { content: "−"; }
-  .faq details p { margin: 0 0 16px; color: #cfd5d2; }
+  .faq details p { margin: 0 0 16px; color: var(--text-2); }
   .faq summary:focus-visible { outline: 2px solid var(--road); border-radius: 6px; }
 
   /* CTA final */
@@ -419,12 +476,12 @@
     padding: 60px 28px;
     text-align: center;
     background:
-      linear-gradient(rgba(11,15,15,.55), rgba(11,15,15,.85)),
-      url("assets/dragon-blue.jpg") center / cover;
+      linear-gradient(rgba(var(--bg-rgb), .55), rgba(var(--bg-rgb), .85)),
+      var(--wall-cta) center / cover;
     border: 1px solid var(--border-strong);
   }
   .cta .cmd { margin: 26px auto 0; text-align: left; }
-  .cta p { color: #cfd5d2; margin: 10px auto 0; max-width: 560px; }
+  .cta p { color: var(--text-2); margin: 10px auto 0; max-width: 560px; }
 
   footer {
     padding: 48px 0 40px;
@@ -480,7 +537,7 @@
   <div class="hero-bars" id="hero-bars">
   <nav class="bar" aria-label="Réplica de la barra en modo islas">
     <div class="side">
-      <div class="island frog-pill"><img class="frog" src="assets/frog.gif" alt=""></div>
+      <div class="island frog-pill"><img class="frog" src="assets/frog-forest-road.gif" alt=""></div>
       <div class="island ws-pill">
         <span class="wsb"><b>1</b><svg class="ico"><use href="#i-code"/></svg><svg class="ico"><use href="#i-web"/></svg><svg class="ico"><use href="#i-term"/></svg></span>
         <span class="wsb active"><b>2</b><svg class="ico"><use href="#i-code"/></svg></span>
@@ -494,7 +551,7 @@
   </nav>
   <div class="capsule-bar" aria-label="Réplica de la barra en modo cápsula">
     <div class="island">
-      <img class="frog" src="assets/frog.gif" alt="">
+      <img class="frog" src="assets/frog-forest-road.gif" alt="">
       <span class="wsb"><svg class="ico"><use href="#i-web"/></svg></span><span class="wsb active"><svg class="ico"><use href="#i-term"/></svg></span><span class="wsb"><svg class="ico"><use href="#i-code"/></svg></span>
       <span class="clock"><span class="date">Vie 23 de oct </span><span class="time">1:26 PM</span></span>
       <span class="power"><svg class="pw"><use href="#i-pw"/></svg></span>
@@ -504,8 +561,8 @@
 
   <div class="wrap hero-body">
     <p class="eyebrow">flipfrog · Hyprland · CachyOS</p>
-    <h1>Tu defines tu <span>estilo</span> al jugar.</h1>
-    <p class="lead">Un escritorio para Linux enfocado en el rendimiento, minimalismo, sin complicaciones para el día a día, y todo listo desde el minuto uno.</p>
+    <h1>Instala, <span class="tp" tabindex="0" title="Prueba otro tema">personaliza<span class="tp-menu" role="group" aria-label="Temas"><button type="button" class="tp-opt" data-theme="forest-road" title="forest-road" aria-label="Tema forest-road" style="background-image:url('assets/forest-road.jpg')"></button><button type="button" class="tp-opt" data-theme="dragon-blue" title="dragon-blue" aria-label="Tema dragon-blue" style="background-image:url('assets/dragon-blue.jpg')"></button><button type="button" class="tp-opt" data-theme="retrocar" title="retrocar" aria-label="Tema retrocar" style="background-image:url('assets/retrocar.jpg')"></button><button type="button" class="tp-opt" data-theme="train-galactic" title="train-galactic" aria-label="Tema train-galactic" style="background-image:url('assets/train-galactic.jpg')"></button></span></span> y juega.</h1>
+    <p class="lead">Un escritorio para Linux enfocado en el rendimiento y el minimalismo, sin complicaciones para el día a día y con todo listo desde el minuto uno.</p>
     <div class="cmd">
       <code>curl -fsSL shb3r.github.io/i | bash</code>
       <button class="btn copy" type="button">Copiar</button>
@@ -519,22 +576,37 @@
 </header>
 
 <main>
+  <!-- Dashboard -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Dashboard · <span class="key-inline">SUPER + +</span></p>
+        <h2>Cada opción, a uno o dos clics.</h2>
+        <p>Un solo panel para la apariencia, las conexiones, el sonido y las pantallas. Sin archivos de configuración ni comandos.</p>
+      </div>
+      <div class="dash reveal">
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <div class="tab-panel" role="tabpanel" id="panel"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- Minimal o completo -->
   <section>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">A tu medida</p>
-        <h2>Minimalista o con todo a la vista.</h2>
-        <p>Modifica cada aspecto de la barra de tareas de una forma muy sencilla y adaptala completamente a tu gusto/uso.</p>
+        <h2>Solo tú defines tu estilo.</h2>
+        <p>Modifica cada aspecto de la barra de tareas de una forma muy sencilla y adáptala completamente a tu gusto/uso.</p>
       </div>
       <div class="duo reveal">
         <div class="card">
-          <h3>Modo cápsula</h3>
-          <p class="sub">Solo lo esencial, y lo demás aparece cuando importa.</p>
+          <h3>Modo Cápsula</h3>
+          <p class="sub">Solo lo esencial; lo demás solo cuando importa, ideal para amantes del minimalismo y para un máximo enfoque.</p>
           <div class="mini-bg">
             <div class="capsule-bar">
               <div class="island">
-                <img class="frog" src="assets/frog.gif" alt="">
+                <img class="frog" src="assets/frog-forest-road.gif" alt="">
                 <span class="wsb"><svg class="ico"><use href="#i-web"/></svg></span><span class="wsb active"><svg class="ico"><use href="#i-term"/></svg></span><span class="wsb"><svg class="ico"><use href="#i-code"/></svg></span>
                 <span class="clock">Sáb 24 de oct 2:14 PM</span>
                 <span class="power"><svg class="pw"><use href="#i-pw"/></svg></span>
@@ -542,15 +614,14 @@
             </div>
           </div>
           <ul class="check">
-            <li><b>Cápsula</b> compacta y fondo transparente.</li>
-            <li><b>Indicadores</b> de VPN, No molestar o audiolibro solo mientras están activos.</li>
-            <li><b>Solo tus apps abiertas</b>: una fila de íconos, sin números de workspace.</li>
-            <li><b>Ocultar la barra</b> con <span class="key-inline">SUPER + W</span>.</li>
+            <li><b>Cápsula</b> es una barra única y compacta, centrada en la parte superior de tu pantalla.</li>
+            <li><b>Indicadores</b> del sistema y de tus programas de fondo visibles únicamente al pasar tu mouse sobre ellos.</li>
+            <li>Tu <b>música</b> sigue ahí, aunque con controles reducidos.</li>
           </ul>
         </div>
         <div class="card">
-          <h3>Completo</h3>
-          <p class="sub">Todo tu sistema, de un vistazo.</p>
+          <h3>Modo Islas</h3>
+          <p class="sub">Extendida al ancho de tu pantalla, muestra todo lo que necesites organizado y separado por módulos.</p>
           <div class="mini-bg">
             <nav class="bar mini full" aria-label="Réplica de la barra con métricas de uso">
               <div class="side">
@@ -567,27 +638,11 @@
             </nav>
           </div>
           <ul class="check">
-            <li><b>Métricas de uso</b>: RAM, CPU, GPU y temperaturas en la barra.</li>
-            <li><b>Íconos de cada ventana</b> dentro de su workspace, agrupados por app si quieres.</li>
-            <li><b>Reloj extendido</b> con fecha y degradado; clic abre calendario, clic derecho alarmas.</li>
-            <li><b>Procesos, red y disco</b> en vivo desde el dashboard.</li>
+            <li><b>Isla</b> por cada módulo, porque tener todo en uno no va contigo.</li>
+            <li><b>Indicadores</b> del sistema y de tus programas de fondo siempre visibles.</li>
+            <li>Tu <b>música</b> sigue ahí: salta, pausa y demás sin abrir más ventanas.</li>
           </ul>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Dashboard -->
-  <section>
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Dashboard · <span class="key-inline">SUPER + +</span></p>
-        <h2>Cada opción, a uno o dos clics.</h2>
-        <p>Un solo panel para la apariencia, las conexiones, el sonido y las pantallas. Sin archivos de configuración ni comandos.</p>
-      </div>
-      <div class="dash reveal">
-        <div class="tabs" role="tablist" id="tabs"></div>
-        <div class="tab-panel" role="tabpanel" id="panel"></div>
       </div>
     </div>
   </section>
@@ -622,22 +677,17 @@
       </div>
       <div class="grid apps reveal">
         <div class="card"><h3>Radio Bandcamp</h3><p>Descubre música por género, artista o tu wishlist, o reproduce tu propia carpeta. Ecualizador automático según el género.</p><div class="key"><span class="key-inline">SUPER + M</span></div></div>
+        <div class="card"><h3>Calendario a Android</h3><p>Notas por día que se sincronizan con tu celular Android escaneando un QR.</p><div class="key"><span class="key-inline">clic en el reloj</span></div></div>
         <div class="card"><h3>Audiolibros</h3><p>Convierte cualquier EPUB en un audiolibro narrado y escúchalo con el texto resaltado frase por frase.</p><div class="key"><span class="key-inline">SUPER + A</span></div></div>
         <div class="card"><h3>Gestor de descargas</h3><p>MediaFire, Google Drive, MEGA, YouTube (MP3 o MP4) y torrents. Pausa, reanuda y sigue aunque cierres la ventana.</p><div class="key"><span class="key-inline">SUPER + D</span></div></div>
         <div class="card"><h3>Lanzador</h3><p>Busca apps, organízalas por categorías y ve las que más usas. Termina con "?" y pregúntale a Claude.</p><div class="key"><span class="key-inline">SUPER + SPACE</span></div></div>
-        <div class="card"><h3>Galería y editor de temas</h3><p>Cambia de tema con un clic o crea uno: el editor saca los colores de tu fondo.</p><div class="key"><span class="key-inline">SUPER + P</span></div></div>
-        <div class="card"><h3>Collage de ventanas</h3><p>Todas tus ventanas de todos los workspaces, en vivo. Arrastra para cambiarlas de lugar.</p><div class="key"><span class="key-inline">SUPER + CTRL + TAB</span></div></div>
-        <div class="card"><h3>Notificaciones</h3><p>Historial del día, volver a mostrar o borrar, y No molestar que se mantiene al reiniciar.</p><div class="key"><span class="key-inline">SUPER + N</span></div></div>
-        <div class="card"><h3>Calendario</h3><p>Notas por día que se sincronizan con tu celular Android escaneando un QR.</p><div class="key"><span class="key-inline">clic en el reloj</span></div></div>
+        <div class="card"><h3>Galería de temas</h3><p>Todos tus temas con miniaturas; clic en uno y se aplica al momento.</p><div class="key"><span class="key-inline">SUPER + P</span></div></div>
         <div class="card"><h3>Alarmas</h3><p>Una sola vez o por días de la semana. Suenan aunque estés jugando.</p><div class="key"><span class="key-inline">clic derecho en el reloj</span></div></div>
-        <div class="card"><h3>Google Fonts</h3><p>Busca, previsualiza e instala cualquier fuente de Google en un clic.</p><div class="key"><span class="key-inline">Personalización</span></div></div>
+        <div class="card"><h3>Buscador de fuentes</h3><p>Busca, previsualiza e instala cualquier fuente de Google en un clic.</p><div class="key"><span class="key-inline">Personalización</span></div></div>
         <div class="card"><h3>Cursores, íconos y arranque</h3><p>Elige con vista previa y descarga más desde los repositorios o la KDE Store.</p><div class="key"><span class="key-inline">Personalización</span></div></div>
         <div class="card"><h3>Uso de disco</h3><p>Un mapa de qué ocupa espacio en tu disco, en unos segundos.</p><div class="key"><span class="key-inline">pestaña Procesos</span></div></div>
-        <div class="card"><h3>Firewall</h3><p>Reglas, registro de bloqueos y tráfico por app en vivo.</p><div class="key"><span class="key-inline">pestaña Red</span></div></div>
+        <div class="card"><h3>Integración Firewall UFW</h3><p>Reglas, registro de bloqueos y tráfico por app en vivo.</p><div class="key"><span class="key-inline">pestaña Red</span></div></div>
         <div class="card"><h3>Atajos</h3><p>Todos los atajos de teclado en una sola vista. Puede abrirse al iniciar sesión.</p><div class="key"><span class="key-inline">SUPER + H</span></div></div>
-        <div class="card"><h3>Modo cine</h3><p>Manda la ventana a pantalla completa, apaga el otro monitor y silencia las notificaciones.</p><div class="key"><span class="key-inline">SUPER + SHIFT + C</span></div></div>
-        <div class="card"><h3>Menú de energía</h3><p>Apagar, reiniciar o cerrar sesión con una tecla, sobre un fondo desenfocado.</p><div class="key"><span class="key-inline">ícono de power</span></div></div>
-        <div class="card"><h3>Pantalla de inicio de sesión</h3><p>Sigue el fondo y los colores de tu tema activo.</p><div class="key"><span class="key-inline">automático</span></div></div>
       </div>
     </div>
   </section>
@@ -646,9 +696,9 @@
   <section>
     <div class="wrap">
       <div class="sec-head reveal">
-        <p class="eyebrow">Temas</p>
+        <p class="eyebrow">Temas · <span class="key-inline">SUPER + P</span></p>
         <h2>Un tema pinta todo.</h2>
-        <p>Un fondo (imagen, gif o video) y sus colores. Al aplicarlo cambian la barra, las ventanas, la terminal, el navegador y hasta la pantalla de inicio de sesión, sin cerrar nada.</p>
+        <p>Un fondo (imagen, gif o video) y 8 colores en un solo <code>colors.css</code>. Al aplicarlo, cada app que lo soporta recibe la paleta: el escritorio cambia al momento y algunas apps la toman la próxima vez que las abres.</p>
       </div>
       <div class="themes reveal">
         <div class="theme-card">
@@ -665,6 +715,28 @@
             <div class="swatches"><i style="background:#241f31"></i><i style="background:#074880"></i><i style="background:#ffa348"></i><i style="background:#99c1f1"></i><i style="background:#8ff0a4"></i><i style="background:#fff"></i></div>
           </div>
         </div>
+        <div class="theme-card">
+          <div class="shot" style="background-image:url('assets/retrocar.jpg')"></div>
+          <div class="meta">
+            <div><h3>retrocar</h3><p class="req">Incluido</p></div>
+            <div class="swatches"><i style="background:#1c1629"></i><i style="background:#4b4980"></i><i style="background:#803932"></i><i style="background:#7f7dbf"></i><i style="background:#bf6860"></i><i style="background:#fff"></i></div>
+          </div>
+        </div>
+        <div class="theme-card">
+          <div class="shot" style="background-image:url('assets/train-galactic.jpg')"></div>
+          <div class="meta">
+            <div><h3>train-galactic</h3><p class="req">Incluido</p></div>
+            <div class="swatches"><i style="background:#272529"></i><i style="background:#80776f"></i><i style="background:#c48468"></i><i style="background:#daa67d"></i><i style="background:#cc9d7b"></i><i style="background:#fff"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="sync reveal">
+        <span class="from">colors.css</span><span class="arrow">→</span>
+        <span class="chip">Hyprland (bordes y blur)</span><span class="chip">Barra y popups (GTK 3)</span><span class="chip">Apps GTK 3</span><span class="chip">Apps Qt / KDE (kdeglobals)</span><span class="chip">Kitty (fondo y 16 colores ANSI)</span><span class="chip">Dunst</span><span class="chip">btop</span><span class="chip">Fastfetch</span>
+      </div>
+      <div class="sync reveal">
+        <span class="mode-label" style="margin:0">Al reabrir la app</span><span class="arrow">→</span>
+        <span class="chip">Brave (extensión de tema)</span><span class="chip">Zen Browser</span><span class="chip">Vesktop (Discord)</span><span class="chip">Steam (Millennium)</span><span class="chip">Inicio de sesión (SDDM)</span>
       </div>
     </div>
   </section>
@@ -675,12 +747,17 @@
       <div class="sec-head reveal">
         <p class="eyebrow">Instalación</p>
         <h2>Tres pasos.</h2>
-        <p>Solo verás una barra de progreso. Si algo falla, te muestra qué pasó; si no, solo te pide reiniciar.</p>
+        <p>Selecciona tus preferencias, espera un poco y listo, solo reinicia.</p>
       </div>
-      <div class="steps reveal">
-        <div class="card step"><h3>Instala CachyOS</h3><p>Bájalo de <a href="https://cachyos.org/download/">cachyos.org</a> y, cuando el instalador pregunte por el escritorio, elige <b>Hyprland</b>.</p></div>
-        <div class="card step"><h3>Pega el comando</h3><p>Abre la terminal, pega el comando con <code>Ctrl + Shift + V</code> y presiona Enter.</p></div>
-        <div class="card step"><h3>Elige y reinicia</h3><p>Elige tu teclado y tus extras, escribe tu contraseña (no se ve al escribirla) y reinicia al terminar.</p></div>
+      <div class="steps install reveal">
+        <div class="card step"><h3>Instala CachyOS</h3><p>Descárgalo de <a href="https://cachyos.org/download/">cachyos.org</a> e instálalo. Cuando te pida elegir el escritorio, selecciona <b>Hyprland</b>.</p></div>
+        <div class="card step"><h3>Abre una terminal y pega esta línea</h3><p>Al entrar a CachyOS, abre la terminal desde el menú de aplicaciones. Esta línea descarga el instalador de <code>shb3r.github.io</code> y lo ejecuta: pégala con <code>Ctrl + Shift + V</code> y presiona Enter.</p>
+          <div class="cmd step-cmd">
+            <code>curl -fsSL shb3r.github.io/i | bash</code>
+            <button class="btn copy" type="button">Copiar</button>
+          </div>
+          <p class="step-hint">Te preguntará tu teclado, qué extras quieres y tu contraseña (al escribirla no se ve nada, es normal).</p></div>
+        <div class="card step"><h3>Reinicia</h3><p>Cuando la barra de progreso termine, reinicia y entrarás a tu nuevo escritorio.</p></div>
       </div>
       <div class="term reveal" aria-label="Ejemplo de lo que verás mientras se instala">
         <div><span class="ok">✓</span> Teclado: Latinoamérica</div>
@@ -689,7 +766,7 @@
         <div>&nbsp;</div>
         <div><span class="bar-fill">[█████████████████████░░░░░░░░░]</span> 71%  <span class="dim">Instalando vesktop…</span></div>
       </div>
-      <p class="note reveal">Lo que el instalador reemplaza se respalda en <code>~/.config-respaldo-&lt;fecha&gt;</code>; no se borra nada. Al final puedes ver un resumen de todo lo que instaló y cambió.</p>
+      <p class="note reveal"><b class="note-title">¿Ya usas CachyOS?</b>No te preocupes, no tienes que reinstalar: instala el escritorio de Hyprland y corre la misma línea. Tu configuración actual se respalda en <code>~/.config-respaldo-&lt;fecha&gt;</code>; no se borra nada.</p>
     </div>
   </section>
 
@@ -697,9 +774,9 @@
   <section>
     <div class="wrap">
       <div class="sec-head reveal">
-        <p class="eyebrow">Atajos</p>
+        <p class="eyebrow">Atajos · <span class="key-inline">SUPER + H</span></p>
         <h2>Todo con el mouse, o más rápido con el teclado.</h2>
-        <p>Los más usados. <span class="key-inline">SUPER + H</span> muestra la lista completa.</p>
+        <p>Los más usados; con ese atajo ves la lista completa.</p>
       </div>
       <div class="keys reveal" id="keys"></div>
     </div>
@@ -707,9 +784,9 @@
 
   <div class="wrap">
     <div class="cta reveal">
-      <p class="eyebrow">Listo para probar</p>
-      <h2>Instala CachyOS Hyprland y pega esto.</h2>
-      <p>Tus archivos actuales quedan respaldados. Al terminar, reinicia y empieza a usarlo.</p>
+      <p class="eyebrow">Listo para CachyOS con Hyprland</p>
+      <h2>Instala, personaliza y juega.</h2>
+      <p>Ya con CachyOS instalado, abre una terminal y pega esta línea.<br>Al terminar, reinicia y empieza a usarlo.</p>
       <div class="cmd">
         <code>curl -fsSL shb3r.github.io/i | bash</code>
         <button class="btn copy" type="button">Copiar</button>
@@ -727,7 +804,7 @@
 
 <script>
   const TABS = [
-    ["Sistema", "Lo de todos los días.", "Brillo de tus monitores, aviso de actualizaciones y switches rápidos: VPN, No molestar, contraste alto y cada pieza de la barra.",
+    ["Sistema", "Lo de todos los días.", "Brillo de tus monitores, aviso de actualizaciones y switches rápidos: VPN, No molestar y cada pieza de la barra.",
       ["Brillo", "Actualizaciones", "VPN", "No molestar", "Barra en vivo"]],
     ["Personalización", "Cómo se ve todo.", "Fuente, cursor, íconos, pantalla de arranque e idioma, cada uno con su tienda. Y para las ventanas: animaciones, blur, opacidad, bordes, espacios y redondeo.",
       ["Fuentes", "Cursores", "Íconos", "Arranque", "Idioma", "Blur", "Redondeo"]],
@@ -741,13 +818,15 @@
       ["Emparejar", "Conectar", "Autoconexión"]],
     ["Sonido", "Mezclador y ecualizador.", "Volumen por app, salida de audio y un ecualizador de 6 bandas con preajustes.",
       ["Por app", "Salida", "Ecualizador"]],
-    ["Monitores", "Acomoda tus pantallas.", "Resolución, frecuencia, escala, rotación, duplicar o extender y monitor principal, arrastrando en un lienzo.",
-      ["Lienzo", "Escala", "Rotación", "Duplicar", "Touch"]],
+    ["Monitores", "Acomoda tus pantallas.", "Contraste alto, resolución, frecuencia, escala, rotación, duplicar o extender y monitor principal, arrastrando en un lienzo.",
+      ["Lienzo", "Escala", "Rotación", "Duplicar", "Touch", "Contraste alto"]],
   ];
 
   const tabsEl = document.getElementById("tabs");
   const panel = document.getElementById("panel");
+  let currentTab = 0;
   function selectTab(i) {
+    currentTab = i;
     const [, title, text, chips] = TABS[i];
     [...tabsEl.children].forEach((b, j) => b.setAttribute("aria-selected", i === j));
     panel.innerHTML = `<div><h3>${title}</h3><p>${text}</p></div><div class="chips">${chips.map(c => `<span class="chip">${c}</span>`).join("")}</div>`;
@@ -757,10 +836,21 @@
     b.type = "button";
     b.role = "tab";
     b.textContent = name;
-    b.addEventListener("click", () => selectTab(i));
+    b.addEventListener("click", () => { selectTab(i); restartTabs(); });
     tabsEl.append(b);
   });
   selectTab(0);
+
+  // Avanza solo entre pestañas; se detiene con el mouse encima y un clic reinicia la cuenta
+  const dash = document.querySelector(".dash");
+  let tabTimer;
+  function restartTabs() {
+    clearInterval(tabTimer);
+    tabTimer = setInterval(() => {
+      if (!dash.matches(":hover")) selectTab((currentTab + 1) % TABS.length);
+    }, 4000);
+  }
+  restartTabs();
 
   const KEYS = [
     [["SUPER", "+"], "Dashboard"],
@@ -781,7 +871,7 @@
   document.getElementById("keys").innerHTML = KEYS.map(([combo, what]) =>
     `<div class="keyrow"><span>${what}</span><span class="combo">${combo.map(k => `<kbd>${k}</kbd>`).join("")}</span></div>`).join("");
 
-  const EXTRAS = ["Brave Origin*", "Shelly*", "Vesktop", "ZapZap", "Stremio", "OnlyOffice", "GIMP", "OBS Studio", "DaVinci Resolve", "VLC", "Galculator", "Voces para audiolibros", "Steam", "Millennium", "OpenRGB", "Overskride"];
+  const EXTRAS = ["Brave Origin*", "Shelly*", "Vesktop (Discord)", "ZapZap (WhatsApp)", "Stremio", "OnlyOffice (Ofimática)", "GIMP", "OBS Studio", "DaVinci Resolve", "VLC", "Voces para audiolibros", "Steam", "Millennium (Temas Steam)", "OpenRGB", "Overskride (Bluetooth alternativa)"];
   document.getElementById("extras").innerHTML = EXTRAS.map(e => e.endsWith("*")
     ? `<span class="chip def" title="Marcado por defecto">${e.slice(0, -1)} ★</span>`
     : `<span class="chip">${e}</span>`).join("");
@@ -815,6 +905,58 @@
   const heroBars = document.getElementById("hero-bars");
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
     setInterval(() => heroBars.classList.toggle("capsule"), 5000);
+
+  // Temas de la página: los 8 roles de cada .theme del repo
+  const THEMES = {
+    "forest-road":    { hover: "#222629", b1: "#5a7b80", road: "#e0812f", a1: "#ccc8b4", a2: "#c0bfbc", island: .40 },
+    "dragon-blue":    { hover: "#241f31", b1: "#074880", road: "#ffa348", a1: "#99c1f1", a2: "#8ff0a4", island: .33 },
+    "retrocar":       { hover: "#1c1629", b1: "#4b4980", road: "#bf6860", a1: "#7f7dbf", a2: "#bf6860", island: .55 },
+    "train-galactic": { hover: "#272529", b1: "#80776f", road: "#c48468", a1: "#daa67d", a2: "#cc9d7b", island: .15 },
+  };
+  const NAMES = Object.keys(THEMES);
+  const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const hex = c => "#" + c.map(v => v.toString(16).padStart(2, "0")).join("");
+  const BLACK = [0, 0, 0], WHITE = [255, 255, 255];
+
+  function themeVars(name) {
+    const t = THEMES[name], b1 = rgb(t.b1), bg = mix(BLACK, b1, .12);
+    const next = NAMES[(NAMES.indexOf(name) + 1) % NAMES.length];
+    return {
+      "--bg": hex(bg), "--bg-rgb": bg.join(", "),
+      "--bg-2": hex(mix(BLACK, b1, .18)), "--panel-solid": hex(mix(BLACK, b1, .21)),
+      "--hover": t.hover, "--fg": hex(mix(WHITE, rgb(t.a1), .25)),
+      "--muted": hex(mix(mix(WHITE, b1, .55), BLACK, .07)), "--text-2": hex(mix(WHITE, b1, .22)),
+      "--accent": t.a1, "--accent-2": t.a2, "--teal": t.b1, "--road": t.road,
+      "--border": `rgba(${b1.join(", ")}, 0.35)`, "--border-strong": t.b1,
+      "--island": `rgba(0, 0, 0, ${t.island})`,
+      "--kbd": hex(mix(BLACK, b1, .26)), "--kbd-border": hex(mix(BLACK, b1, .55)), "--term": hex(mix(BLACK, b1, .06)),
+      "--wall": `url("assets/${name}.jpg")`, "--wall-cta": `url("assets/${next}.jpg")`,
+    };
+  }
+
+  let animTimer;
+  function applyTheme(name, animate) {
+    if (!THEMES[name]) return;
+    const root = document.documentElement;
+    if (animate) {
+      root.classList.add("theme-anim");
+      clearTimeout(animTimer);
+      animTimer = setTimeout(() => root.classList.remove("theme-anim"), 500);
+    }
+    if (name === "forest-road") root.removeAttribute("style");
+    else Object.entries(themeVars(name)).forEach(([k, v]) => root.style.setProperty(k, v));
+    document.querySelectorAll(".frog").forEach(img => img.src = `assets/frog-${name}.gif`);
+    document.querySelectorAll(".tp-opt").forEach(b => b.setAttribute("aria-pressed", b.dataset.theme === name));
+    try { localStorage.setItem("flipfrog-theme", name); } catch {}
+  }
+  document.querySelectorAll(".tp-opt").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation();
+    applyTheme(b.dataset.theme, true);
+  }));
+  let saved = "forest-road";
+  try { saved = localStorage.getItem("flipfrog-theme") || saved; } catch {}
+  applyTheme(saved, false);
 
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
