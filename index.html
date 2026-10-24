@@ -213,6 +213,7 @@
   .btn:hover { background: #fff; transform: translateY(-1px); }
   .btn.ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong); }
   .btn.ghost:hover { background: rgba(255,255,255,.06); }
+  .cmd-note { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
   .hero-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
   .req { font-size: 14px; color: var(--muted); }
 
@@ -362,6 +363,14 @@
   /* Apps */
   .apps .card { display: flex; flex-direction: column; }
   .apps .card .key { margin-top: auto; padding-top: 14px; }
+  .apps.featured { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); margin-bottom: 14px; }
+  .apps.featured .card { padding: 28px; }
+  .apps.featured h3 { font-size: 1.35rem; margin-bottom: 8px; }
+  .apps.featured p { font-size: 16px; }
+  .apps.minor { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .apps.minor .card { padding: 18px; }
+  .apps.minor h3 { font-size: 1rem; }
+  .apps.minor p { font-size: 14px; }
   .key-inline {
     display: inline-block;
     font: 600 11px var(--mono);
@@ -564,6 +573,7 @@
     <p class="eyebrow hero-eyebrow">Hyprland · CachyOS</p>
     <h1>Instala, <span class="tp" tabindex="0" title="Prueba otro tema">personaliza<span class="tp-menu" role="group" aria-label="Temas"><button type="button" class="tp-opt" data-theme="forest-road" title="forest-road" aria-label="Tema forest-road" style="background-image:url('assets/forest-road.jpg')"></button><button type="button" class="tp-opt" data-theme="dragon-blue" title="dragon-blue" aria-label="Tema dragon-blue" style="background-image:url('assets/dragon-blue.jpg')"></button><button type="button" class="tp-opt" data-theme="retrocar" title="retrocar" aria-label="Tema retrocar" style="background-image:url('assets/retrocar.jpg')"></button><button type="button" class="tp-opt" data-theme="train-galactic" title="train-galactic" aria-label="Tema train-galactic" style="background-image:url('assets/train-galactic.jpg')"></button></span></span> y juega.</h1>
     <p class="lead">Un escritorio para Linux enfocado en el rendimiento y el minimalismo, sin complicaciones para el día a día y con todo listo desde el minuto uno.</p>
+    <p class="cmd-note">En una terminal de CachyOS:</p>
     <div class="cmd">
       <code>curl -fsSL shb3r.github.io/i | bash</code>
       <button class="btn copy" type="button">Copiar</button>
@@ -581,7 +591,7 @@
   <section>
     <div class="wrap">
       <div class="sec-head reveal">
-        <p class="eyebrow">Dashboard · <span class="key-inline">SUPER + +</span></p>
+        <p class="eyebrow">Dashboard · <span class="key-inline">SUPER + Más</span></p>
         <h2>Cada opción, a uno o dos clics.</h2>
         <p>Un solo panel para la apariencia, las conexiones, el sonido y las pantallas. Sin archivos de configuración ni comandos.</p>
       </div>
@@ -597,8 +607,8 @@
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">A tu medida</p>
-        <h2>Solo tú defines tu estilo.</h2>
-        <p>Modifica cada aspecto de la barra de tareas de una forma muy sencilla y adáptala completamente a tu gusto/uso.</p>
+        <h2>La barra, a tu manera.</h2>
+        <p>Modifica cada aspecto de la barra de tareas de una forma muy sencilla y adáptala completamente a tu gusto y a tu forma de usarla.</p>
       </div>
       <div class="duo reveal">
         <div class="card">
@@ -676,11 +686,13 @@
         <h2>Hechas para este escritorio.</h2>
         <p>Todas siguen el tema y el idioma, y se abren con una tecla o desde la barra. Las que reproducen o descargan siguen trabajando aunque cierres la ventana.</p>
       </div>
-      <div class="grid apps reveal">
+      <div class="grid apps featured reveal">
         <div class="card"><h3>Radio Bandcamp</h3><p>Descubre música por género, artista o tu wishlist, o reproduce tu propia carpeta. Ecualizador automático según el género.</p><div class="key"><span class="key-inline">SUPER + M</span></div></div>
-        <div class="card"><h3>Calendario a Android</h3><p>Notas por día que se sincronizan con tu celular Android escaneando un QR.</p><div class="key"><span class="key-inline">clic en el reloj</span></div></div>
+        <div class="card"><h3>Calendario a Android</h3><p>Notas por día que se sincronizan con tu celular Android: instala DAVx5 y escanea un QR.</p><div class="key"><span class="key-inline">clic en el reloj</span></div></div>
         <div class="card"><h3>Audiolibros</h3><p>Convierte cualquier EPUB en un audiolibro narrado y escúchalo con el texto resaltado frase por frase.</p><div class="key"><span class="key-inline">SUPER + A</span></div></div>
         <div class="card"><h3>Gestor de descargas</h3><p>MediaFire, Google Drive, MEGA, YouTube (MP3 o MP4) y torrents. Pausa, reanuda y sigue aunque cierres la ventana.</p><div class="key"><span class="key-inline">SUPER + D</span></div></div>
+      </div>
+      <div class="grid apps minor reveal">
         <div class="card"><h3>Lanzador</h3><p>Busca apps, organízalas por categorías y ve las que más usas. Termina con "?" y pregúntale a Claude.</p><div class="key"><span class="key-inline">SUPER + SPACE</span></div></div>
         <div class="card"><h3>Galería de temas</h3><p>Todos tus temas con miniaturas; clic en uno y se aplica al momento.</p><div class="key"><span class="key-inline">SUPER + P</span></div></div>
         <div class="card"><h3>Alarmas</h3><p>Una sola vez o por días de la semana. Suenan aunque estés jugando.</p><div class="key"><span class="key-inline">clic derecho en el reloj</span></div></div>
@@ -785,7 +797,7 @@
 
   <div class="wrap">
     <div class="cta reveal">
-      <p class="eyebrow">Listo para CachyOS con Hyprland</p>
+      <p class="eyebrow">¿Estás listo para CachyOS con Hyprland?</p>
       <h2>Instala, personaliza y juega.</h2>
       <p>Ya con CachyOS instalado, abre una terminal y pega esta línea.<br>Al terminar, reinicia y empieza a usarlo.</p>
       <div class="cmd">
@@ -854,7 +866,7 @@
   restartTabs();
 
   const KEYS = [
-    [["SUPER", "+"], "Dashboard"],
+    [["SUPER", "Más"], "Dashboard"],
     [["SUPER", "SPACE"], "Lanzador de apps"],
     [["SUPER", "T"], "Terminal"],
     [["SUPER", "E"], "Archivos"],
