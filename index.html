@@ -226,6 +226,19 @@
     overflow: hidden;
   }
   .capsule-bar { display: flex; justify-content: center; font-size: 11px; }
+  /* Barra del hero: alterna islas y cápsula */
+  .hero-bars { position: relative; }
+  .hero-bars > * { transition: opacity .6s ease, transform .6s ease; }
+  .hero-bars .capsule-bar {
+    position: absolute; inset: 0;
+    font-size: 14px;
+    padding-top: 6px;
+    opacity: 0; transform: translateY(-6px);
+    pointer-events: none;
+  }
+  .hero-bars.capsule .bar { opacity: 0; transform: translateY(-6px); pointer-events: none; }
+  .hero-bars.capsule .capsule-bar { opacity: 1; transform: none; pointer-events: auto; }
+  .capsule-bar .island { height: 2.15em; }
   .capsule-bar .island { gap: .7em; padding: 0 0 0 .4em; }
   .capsule-bar .power { padding: 0 1.1em 0 .2em; }
 
@@ -431,7 +444,7 @@
   }
   @media (max-width: 560px) {
     .bar { grid-template-columns: auto 1fr auto; }
-    .bar .tray, .bar .date, .bar .frog-pill { display: none; }
+    .bar .tray, .bar .date, .bar .frog-pill, .hero-bars .capsule-bar .date { display: none; }
     .bar.mini { font-size: 9px; }
     .bar.mini .sysmon { display: none; }
     .bar.mini.full .tray { display: flex; }
@@ -462,6 +475,7 @@
 </svg>
 
 <header class="hero">
+  <div class="hero-bars" id="hero-bars">
   <nav class="bar" aria-label="Réplica de la barra en modo islas">
     <div class="side">
       <div class="island frog-pill"><img class="frog" src="assets/frog.gif" alt=""></div>
@@ -470,17 +484,26 @@
         <span class="wsb active"><b>2</b><svg class="ico"><use href="#i-code"/></svg></span>
       </div>
     </div>
-    <div class="island clock-pill"><span class="clock"><span class="date" id="date">Vie 23 de oct </span><span id="time">1:26 PM</span></span></div>
+    <div class="island clock-pill"><span class="clock"><span class="date">Vie 23 de oct </span><span class="time">1:26 PM</span></span></div>
     <div class="side right">
       <div class="island tray"><svg class="ico"><use href="#i-head"/></svg><svg class="ico"><use href="#i-chat"/></svg><svg class="ico"><use href="#i-game"/></svg><svg class="ico"><use href="#i-bulb"/></svg><svg class="ico"><use href="#i-bell"/></svg><svg class="ico"><use href="#i-bt"/></svg><svg class="ico"><use href="#i-vol"/></svg></div>
       <div class="island"><span class="power"><svg class="pw"><use href="#i-pw"/></svg></span></div>
     </div>
   </nav>
+  <div class="capsule-bar" aria-label="Réplica de la barra en modo cápsula">
+    <div class="island">
+      <img class="frog" src="assets/frog.gif" alt="">
+      <span class="wsb"><b>1</b><svg class="ico"><use href="#i-code"/></svg><svg class="ico"><use href="#i-web"/></svg><svg class="ico"><use href="#i-term"/></svg></span><span class="wsb active"><b>2</b><svg class="ico"><use href="#i-code"/></svg></span>
+      <span class="clock"><span class="date">Vie 23 de oct </span><span class="time">1:26 PM</span></span>
+      <span class="power"><svg class="pw"><use href="#i-pw"/></svg></span>
+    </div>
+  </div>
+  </div>
 
   <div class="wrap hero-body">
     <p class="eyebrow">flipfrog · Hyprland · CachyOS</p>
-    <h1>Tan simple o tan <span>completo</span> como quieras.</h1>
-    <p class="lead">Un escritorio para Linux que se adapta a ti: desde una barra mínima que casi no se ve hasta todo tu sistema monitoreado en pantalla. Cada opción está a uno o dos clics, y queda listo para usar en cuanto lo instalas.</p>
+    <h1>Tu defines tu <span>estilo</span> al jugar.</h1>
+    <p class="lead">Un escritorio para Linux enfocado en el rendimiento, minimalismo y sin complicaciones para el día a día. Todo listo al instalar.</p>
     <div class="cmd">
       <code>curl -fsSL shb3r.github.io/i | bash</code>
       <button class="btn copy" type="button">Copiar</button>
@@ -781,8 +804,8 @@
     setTimeout(() => btn.textContent = "Copiar", 1600);
   }));
 
-  const dateEl = document.getElementById("date");
-  const timeEl = document.getElementById("time");
+  const dateEls = document.querySelectorAll(".hero-bars .date");
+  const timeEls = document.querySelectorAll(".hero-bars .time");
   // Reloj compacto, como el de la barra (AM/PM a mano)
   function tick() {
     const d = new Date();
@@ -790,11 +813,16 @@
     const mon = d.toLocaleDateString("es-MX", { month: "short" }).replace(".", "");
     const h = d.getHours() % 12 || 12;
     const m = String(d.getMinutes()).padStart(2, "0");
-    dateEl.textContent = `${day[0].toUpperCase()}${day.slice(1)} ${d.getDate()} de ${mon} `;
-    timeEl.textContent = `${h}:${m} ${d.getHours() < 12 ? "AM" : "PM"}`;
+    dateEls.forEach(el => el.textContent = `${day[0].toUpperCase()}${day.slice(1)} ${d.getDate()} de ${mon} `);
+    timeEls.forEach(el => el.textContent = `${h}:${m} ${d.getHours() < 12 ? "AM" : "PM"}`);
   }
   tick();
   setInterval(tick, 10000);
+
+  // La barra de arriba alterna entre islas y cápsula
+  const heroBars = document.getElementById("hero-bars");
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
+    setInterval(() => heroBars.classList.toggle("capsule"), 5000);
 
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
